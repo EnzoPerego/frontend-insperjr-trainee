@@ -1,7 +1,7 @@
 /* Estilos globais da aplicação */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Estilos customizados */
 body {
