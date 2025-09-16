@@ -1,51 +1,121 @@
-import React from 'react'
+import React from "react";
+import { formatCurrency } from "../lib/utils";
 
-const Home = () => {
+export default function Home() {
+  const pratos = [
+    {
+      titulo: "Eisbein",
+      desc: "Joelho de porco defumado, crocante por fora e macio por dentro.",
+      preco: 69.9,
+    },
+    {
+      titulo: "Pretzel Clássico",
+      desc: "Tradicional alemão com mostarda Dijon.",
+      preco: 22.0,
+    },
+    {
+      titulo: "Feijoada Completa",
+      desc: "O tradicional prato brasileiro com carnes suínas e feijão.",
+      preco: 49.9,
+    },
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Bem-vindo ao InsperJr Trainee
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Seu frontend está configurado e pronto para desenvolvimento! 
-          Com React, Vite, Tailwind CSS e Shadcn UI.
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+    <>
+
+      <section id="home" className="relative">
+
+        <div className="relative w-full h-[68vh] md:h-[76vh] bg-gray-300">
+
+          <div className="absolute inset-0 bg-black/55" />
+
+          <div className="relative container mx-auto h-full px-4 flex items-center">
+            <div className="max-w-[680px] text-white">
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight md:tracking-[-0.01em] leading-[1.05] drop-shadow-sm">
+                KAISERHAUS
+              </h1>
+
+              <p className="mt-4 text-base md:text-lg text-white/90 leading-relaxed">
+                Da nossa cozinha para sua mesa, com o mesmo sabor de sempre
+              </p>
+
+              <a
+                href="#menu"
+                className="inline-flex items-center mt-6 rounded-md bg-kaiserhaus-dark-brown px-5 py-3 font-semibold text-white shadow hover:opacity-90 transition"
+              >
+                Faça seu pedido!
+              </a>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Rápido</h3>
-            <p className="text-gray-600">Desenvolvido com Vite para máxima velocidade de desenvolvimento</p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Moderno</h3>
-            <p className="text-gray-600">Interface moderna com Tailwind CSS e componentes reutilizáveis</p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Flexível</h3>
-            <p className="text-gray-600">Estrutura organizada e pronta para escalar seu projeto</p>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
+      </section>
 
-export default Home
+      <section id="menu" className="bg-white">
+        <div className="container mx-auto px-4 py-14 md:py-20">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <h2 className="text-3xl md:text-[32px] font-extrabold text-gray-900 tracking-tight">
+              <span className="text-kaiserhaus-dark-brown">ESTRELAS KAISERHAUS</span>
+            </h2>
+            <p className="text-gray-700">
+              Conheça os pratos <span className="font-semibold">mais pedidos</span> da casa
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mt-8 md:mt-10">
+            {pratos.map((p) => (
+              <article
+                key={p.titulo}
+                className="bg-white border rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition"
+              >
+                <div className="w-full aspect-[16/10] bg-gray-200" />
+
+                <div className="p-5">
+                  <h3 className="text-xl font-semibold text-gray-900">{p.titulo}</h3>
+                  <p className="mt-1.5 text-gray-600">{p.desc}</p>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="font-semibold text-kaiserhaus-light-brown">
+                  
+                    </span>
+
+                    <button
+                      type="button"
+                      className="group inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium
+                                 border-kaiserhaus-dark-brown text-kaiserhaus-dark-brown
+                                 hover:bg-kaiserhaus-dark-brown hover:text-white transition"
+
+                    >
+                      Adicionar ao carrinho
+                      <svg
+                        className="w-4 h-4 transform group-hover:translate-x-0.5 transition"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <a
+              href="#menu"
+              className="inline-flex items-center rounded-full bg-kaiserhaus-dark-brown px-6 py-3 font-semibold text-white hover:opacity-90 transition"
+            >
+              Veja o cardápio completo
+            </a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
