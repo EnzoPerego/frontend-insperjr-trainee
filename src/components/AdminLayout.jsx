@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
+import Sidebar from './Sidebar'
 
 const AdminLayout = ({ 
   children, 
   title = "Área administrativa",
   onLogout = () => {},
-  menuItems = [],
   activeSection = 'entradas',
   onSectionChange = () => {},
   className = ''
@@ -51,41 +51,11 @@ const AdminLayout = ({
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}>
-          <div className="p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-kaiserhaus-dark-brown mb-6">
-              KAISERHAUS Admin
-            </h2>
-            
-            <nav className="space-y-4 sm:space-y-6">
-              {menuItems.map((section) => (
-                <div key={section.title}>
-                  <h3 className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                    {section.title}
-                  </h3>
-                  <ul className="space-y-1 sm:space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item.id}>
-                        <button
-                          onClick={() => {
-                            onSectionChange(section.title.toLowerCase(), item.id)
-                            // Fechar menu mobile ao clicar
-                            setIsMobileMenuOpen(false)
-                          }}
-                          className={`w-full text-left px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                            activeSection === item.id
-                              ? 'bg-kaiserhaus-dark-brown text-white'
-                              : 'text-gray-700 hover:bg-gray-100'
-                          }`}
-                        >
-                          {item.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </nav>
-          </div>
+          <Sidebar
+            activeSection={activeSection}
+            onSectionChange={onSectionChange}
+            onMobileMenuClose={() => setIsMobileMenuOpen(false)}
+          />
         </div>
 
         {/* Overlay para mobile */}
