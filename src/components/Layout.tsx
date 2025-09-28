@@ -3,7 +3,14 @@ import Header from './Header'
 import Footer from './Footer'
 import { cn } from '../lib/utils'
 
-const Layout = ({ 
+interface LayoutProps {
+  children: React.ReactNode
+  className?: string
+  showHeader?: boolean
+  showFooter?: boolean
+}
+
+const Layout: React.FC<LayoutProps> = ({ 
   children, 
   className = '',
   showHeader = true,

@@ -1,8 +1,14 @@
 import React from "react";
 import { formatCurrency } from "../lib/utils";
 
-export default function Home() {
-  const pratos = [
+interface Prato {
+  titulo: string;
+  desc: string;
+  preco: number;
+}
+
+export default function Home(): React.JSX.Element {
+  const pratos: Prato[] = [
     {
       titulo: "Eisbein",
       desc: "Joelho de porco defumado, crocante por fora e macio por dentro.",
@@ -75,7 +81,7 @@ export default function Home() {
 
                   <div className="mt-4 flex items-center justify-between">
                     <span className="font-semibold text-kaiserhaus-light-brown">
-                  
+                      {formatCurrency(p.preco)}
                     </span>
 
                     <button

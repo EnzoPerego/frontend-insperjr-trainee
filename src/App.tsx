@@ -10,9 +10,9 @@ import PedidosPendentes from './pages/PedidosPendentes'
 import PedidosConcluidos from './pages/PedidosConcluidos'
 import './styles/globals.css'
 
-function App() {
+function App(): React.JSX.Element {
   // Simulação de roteamento simples - em produção usar React Router
-  const currentPath = window.location.pathname
+  const currentPath: string = window.location.pathname
   
   // Rotas do cardápio
   if (currentPath === '/admin/cardapio/entradas') {

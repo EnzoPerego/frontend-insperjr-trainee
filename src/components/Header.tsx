@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
 
-const Header = ({ className = '' }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+interface HeaderProps {
+  className?: string
+}
 
-  const toggleMobileMenu = () => {
+const Header: React.FC<HeaderProps> = ({ className = '' }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+
+  const toggleMobileMenu = (): void => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 

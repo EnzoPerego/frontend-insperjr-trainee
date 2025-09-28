@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
 import Sidebar from './Sidebar'
+import { AdminLayoutProps } from '../types'
 
-const AdminLayout = ({ 
+const AdminLayout: React.FC<AdminLayoutProps> = ({ 
   children, 
   title = "Área administrativa",
   onLogout = () => {},
@@ -10,7 +11,7 @@ const AdminLayout = ({
   onSectionChange = () => {},
   className = ''
 }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
 
   return (
     <div className={cn('min-h-screen bg-gray-50', className)}>

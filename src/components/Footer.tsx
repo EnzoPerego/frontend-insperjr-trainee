@@ -1,7 +1,11 @@
 import React from 'react'
 import { cn } from '../lib/utils'
 
-const Footer = ({ className = '' }) => {
+interface FooterProps {
+  className?: string
+}
+
+const Footer: React.FC<FooterProps> = ({ className = '' }) => {
   return (
     <footer className={cn('bg-kaiserhaus-dark-brown text-white', className)}>
       <div className="container mx-auto px-4 py-12">
