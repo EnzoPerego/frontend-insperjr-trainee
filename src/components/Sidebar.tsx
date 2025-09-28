@@ -1,12 +1,23 @@
 import React from 'react'
+import { SidebarProps } from '../types'
 
-const Sidebar = ({ 
+interface MenuItem {
+  id: string
+  label: string
+}
+
+interface MenuSection {
+  title: string
+  items: MenuItem[]
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ 
   activeSection = 'entradas',
   onSectionChange = () => {},
   onMobileMenuClose = () => {}
 }) => {
   // Menu items centralizados - reutilizável em todas as páginas admin
-  const menuItems = [
+  const menuItems: MenuSection[] = [
     {
       title: "Cardápio",
       items: [
@@ -34,7 +45,7 @@ const Sidebar = ({
   ]
 
   // Função para lidar com navegação
-  const handleNavigation = (section, subSection) => {
+  const handleNavigation = (section: string, subSection: string): void => {
     // Fechar menu mobile
     onMobileMenuClose()
     
@@ -59,7 +70,7 @@ const Sidebar = ({
     }
     
     // Callback para atualizar estado local
-    onSectionChange(section, subSection)
+    onSectionChange(section)
   }
 
   return (
