@@ -157,80 +157,127 @@ export default function Pratos(): React.JSX.Element {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-kaiserhaus-dark-brown"></div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Produto
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Preço
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Ações
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {produtos.map((produto) => (
-                    <tr key={produto.id} className={produto.status === 'Inativo' ? 'opacity-60' : ''}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-12 w-12">
-                            <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                              <span className="text-gray-500 text-sm font-medium">
-                                {produto.titulo.charAt(0)}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {produto.titulo}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {produto.descricao_capa}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(produto.preco)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(produto.status)}`}>
-                          {getStatusIcon(produto.status)}
-                          <span className="ml-1">{produto.status}</span>
+          <>
+            {/* Cards Mobile (sm) */}
+            <div className="grid grid-cols-1 gap-3 md:hidden">
+              {produtos.map((produto) => (
+                <div key={produto.id} className={`bg-white rounded-lg border shadow-sm p-4 ${produto.status === 'Inativo' ? 'opacity-60' : ''}`}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 h-12 w-12">
+                      <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm font-medium">
+                          {produto.titulo.charAt(0)}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <button
-                          onClick={() => toggleProdutoStatus(produto.id)}
-                          className={`p-2 rounded-lg transition-colors ${
-                            produto.status === 'Ativo' 
-                              ? 'text-red-600 hover:bg-red-50' 
-                              : 'text-green-600 hover:bg-green-50'
-                          }`}
-                          title={produto.status === 'Ativo' ? 'Desativar produto' : 'Ativar produto'}
-                        >
-                          {getStatusIcon(produto.status)}
-                        </button>
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-semibold text-gray-900 truncate">{produto.titulo}</h3>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${getStatusColor(produto.status)}`}>
+                          {produto.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-2">{produto.descricao_capa}</p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="font-semibold text-kaiserhaus-light-brown">{formatCurrency(produto.preco)}</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleProdutoStatus(produto.id)}
+                            className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
+                              produto.status === 'Ativo' 
+                                ? 'text-red-700 bg-red-50 hover:bg-red-100' 
+                                : 'text-green-700 bg-green-50 hover:bg-green-100'
+                            }`}
+                          >
+                            {produto.status === 'Ativo' ? 'Desativar' : 'Ativar'}
+                          </button>
+                          <button className="px-3 py-1.5 rounded-md text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+                            Editar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+
+            {/* Tabela Desktop/Tablet (md+) */}
+            <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Produto
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Preço
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Ações
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {produtos.map((produto) => (
+                      <tr key={produto.id} className={produto.status === 'Inativo' ? 'opacity-60' : ''}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-12 w-12">
+                              <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
+                                <span className="text-gray-500 text-sm font-medium">
+                                  {produto.titulo.charAt(0)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {produto.titulo}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {produto.descricao_capa}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {formatCurrency(produto.preco)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(produto.status)}`}>
+                            {getStatusIcon(produto.status)}
+                            <span className="ml-1">{produto.status}</span>
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button
+                            onClick={() => toggleProdutoStatus(produto.id)}
+                            className={`p-2 rounded-lg transition-colors ${
+                              produto.status === 'Ativo' 
+                                ? 'text-red-600 hover:bg-red-50' 
+                                : 'text-green-600 hover:bg-green-50'
+                            }`}
+                            title={produto.status === 'Ativo' ? 'Desativar produto' : 'Ativar produto'}
+                          >
+                            {getStatusIcon(produto.status)}
+                          </button>
+                          <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
 
         {/* TODO: Implementar funcionalidades de backend */}

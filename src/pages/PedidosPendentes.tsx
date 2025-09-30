@@ -118,43 +118,77 @@ export default function PedidosPendentes(): React.JSX.Element {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-kaiserhaus-dark-brown"></div>
           </div>
         ) : (
-          <div className="space-y-3">
-            {pedidos.map((pedido) => (
-              <div key={pedido.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                  {/* Informações do pedido */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{pedido.numero}</h3>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(pedido.status)}`}>
-                        {pedido.status}
-                      </span>
+          <>
+            {/* Cards Mobile (sm) */}
+            <div className="grid grid-cols-1 gap-3 md:hidden">
+              {pedidos.map((pedido) => (
+                <div key={pedido.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <h3 className="text-base font-semibold text-gray-900 truncate">{pedido.numero}</h3>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${getStatusColor(pedido.status)}`}>
+                          {pedido.status}
+                        </span>
+                      </div>
+                      <div className="text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
+                        <span><strong>Cliente:</strong> {pedido.cliente}</span>
+                        <span><strong>Data:</strong> {pedido.data}</span>
+                        <span><strong>Total:</strong> {formatCurrency(pedido.total)}</span>
+                      </div>
+                      <div className="mt-2 text-sm text-gray-600 truncate">
+                        <span className="font-medium text-gray-900">Itens:</span>{' '}
+                        {pedido.itens.map((item) => `${item.quantidade}x ${item.produto}`).join(', ')}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-gray-600">
-                      <span><strong>Cliente:</strong> {pedido.cliente}</span>
-                      <span className="hidden sm:inline text-gray-300">•</span>
-                      <span><strong>Data/Hora:</strong> {pedido.data}</span>
-                      <span className="hidden sm:inline text-gray-300">•</span>
-                      <span><strong>Total:</strong> {formatCurrency(pedido.total)}</span>
+                    <div className="shrink-0">
+                      <button className="px-3 py-1.5 bg-kaiserhaus-dark-brown text-white rounded-md hover:bg-kaiserhaus-brown transition-colors text-sm font-medium">
+                        Editar
+                      </button>
                     </div>
-
-                    {/* Itens do pedido (compacto em uma linha) */}
-                    <div className="mt-2 text-sm text-gray-600 truncate">
-                      <span className="font-medium text-gray-900">Itens:</span>{' '}
-                      {pedido.itens.map((item) => `${item.quantidade}x ${item.produto}`).join(', ')}
-                    </div>
-                  </div>
-
-                  {/* Ações */}
-                  <div className="flex flex-col sm:flex-row gap-2 self-start">
-                    <button className="px-3 py-1.5 bg-kaiserhaus-dark-brown text-white rounded-md hover:bg-kaiserhaus-brown transition-colors text-sm font-medium">
-                      Editar
-                    </button>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Tabela Desktop/Tablet (md+) */}
+            <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data/Hora</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {pedidos.map((pedido) => (
+                      <tr key={pedido.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pedido.numero}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{pedido.cliente}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{pedido.data}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(pedido.total)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(pedido.status)}`}>
+                            {pedido.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <button className="px-3 py-1.5 bg-kaiserhaus-dark-brown text-white rounded-md hover:bg-kaiserhaus-brown transition-colors text-sm">
+                            Editar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ))}
-          </div>
+            </div>
+          </>
         )}
 
         {/* TODO: Implementar funcionalidades de backend */}
