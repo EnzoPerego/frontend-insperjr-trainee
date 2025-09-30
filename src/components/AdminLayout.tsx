@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { cn } from '../lib/utils'
 import Sidebar from './Sidebar'
 import { AdminLayoutProps } from '../types'
+import { useAuth } from './AuthContext'
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ 
   children, 
@@ -12,6 +13,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
   className = ''
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+
+  const { logout } = useAuth()
 
   return (
     <div className={cn('min-h-screen bg-gray-50', className)}>
@@ -36,7 +39,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h1>
           </div>
           <button 
-            onClick={onLogout}
+            onClick={() => { onLogout(); logout(); }}
             className="px-3 py-2 sm:px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
           >
             Logout

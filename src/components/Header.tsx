@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
+import { useAuth } from './AuthContext'
 
 interface HeaderProps {
   className?: string
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+  const { user, logout } = useAuth()
 
   const toggleMobileMenu = (): void => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -49,9 +51,9 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
           {/* Logo - Centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider">
+            <a href="/" className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider hover:text-kaiserhaus-light-brown transition-colors">
               KAISERHAUS
-            </h1>
+            </a>
           </div>
 
           {/* Right Navigation - Hidden on mobile */}
@@ -68,12 +70,21 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             >
               Carrinho
             </a>
-            <a 
-              href="#login" 
-              className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
-            >
-              Login
-            </a>
+            {user ? (
+              <button 
+                onClick={logout}
+                className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+              >
+                Logout
+              </button>
+            ) : (
+              <a 
+                href="/login" 
+                className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+              >
+                Login
+              </a>
+            )}
           </nav>
         </div>
 
@@ -109,13 +120,22 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               >
                 Carrinho
               </a>
-              <a 
-                href="#login" 
-                className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Login
-              </a>
+              {user ? (
+                <button 
+                  className="px-4 py-3 text-left w-full text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium"
+                  onClick={() => { logout(); setIsMobileMenuOpen(false) }}
+                >
+                  Logout
+                </button>
+              ) : (
+                <a 
+                  href="/login" 
+                  className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Login
+                </a>
+              )}
             </nav>
           </div>
         )}
