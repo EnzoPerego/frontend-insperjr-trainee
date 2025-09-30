@@ -1,7 +1,7 @@
 // Configuração geral da aplicação
 export const config = {
   // URL do backend
-  API_BASE_URL: (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  API_BASE_URL: (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:8000',
   
   // Outras configurações
   APP_NAME: 'InsperJr Trainee',
