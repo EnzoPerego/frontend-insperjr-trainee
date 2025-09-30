@@ -114,45 +114,36 @@ export default function PedidosConcluidos(): React.JSX.Element {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-kaiserhaus-dark-brown"></div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {pedidos.map((pedido) => (
-              <div key={pedido.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 opacity-75">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div key={pedido.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 opacity-75">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                   {/* Informações do pedido */}
                   <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-3">
+                    <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">{pedido.numero}</h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(pedido.status)}`}>
                         {pedido.status}
                       </span>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                      <div>
-                        <p><strong>Cliente:</strong> {pedido.cliente}</p>
-                        <p><strong>Data/Hora:</strong> {pedido.data}</p>
-                      </div>
-                      <div>
-                        <p><strong>Total:</strong> {formatCurrency(pedido.total)}</p>
-                      </div>
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-gray-600">
+                      <span><strong>Cliente:</strong> {pedido.cliente}</span>
+                      <span className="hidden sm:inline text-gray-300">•</span>
+                      <span><strong>Data/Hora:</strong> {pedido.data}</span>
+                      <span className="hidden sm:inline text-gray-300">•</span>
+                      <span><strong>Total:</strong> {formatCurrency(pedido.total)}</span>
                     </div>
 
-                    {/* Itens do pedido */}
-                    <div className="mt-4">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Itens do pedido:</h4>
-                      <ul className="space-y-1">
-                        {pedido.itens.map((item, index) => (
-                          <li key={index} className="text-sm text-gray-600">
-                            {item.quantidade}x {item.produto} - {formatCurrency(item.preco)}
-                          </li>
-                        ))}
-                      </ul>
+                    {/* Itens do pedido (compacto em uma linha) */}
+                    <div className="mt-2 text-sm text-gray-600 truncate">
+                      <span className="font-medium text-gray-900">Itens:</span>{' '}
+                      {pedido.itens.map((item) => `${item.quantidade}x ${item.produto}`).join(', ')}
                     </div>
                   </div>
 
                   {/* Ações */}
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <button className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2 self-start">
+                    <button className="px-3 py-1.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm font-medium flex items-center gap-2">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
