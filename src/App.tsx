@@ -12,6 +12,8 @@ import './styles/globals.css'
 import { AuthProvider, useAuth } from './components/AuthContext'
 import Login from './pages/Login'
 import CadastroCliente from './pages/CadastroCliente'
+import AdminAddProduto from './pages/AdminAddProduto'
+import AdminCategorias from './pages/AdminCategorias'
 
 function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { user } = useAuth()
@@ -40,12 +42,32 @@ function App(): React.JSX.Element {
       </AuthProvider>
     )
   }
+
+  if (currentPath === '/admin/cardapio/entradas/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddProduto categoriaNome="Entradas" titulo="Entradas" redirect="/admin/cardapio/entradas" />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
   
   if (currentPath === '/admin/cardapio/pratos') {
     return (
       <AuthProvider>
         <AdminGuard>
           <Pratos />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
+
+  if (currentPath === '/admin/cardapio/pratos/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddProduto categoriaNome="Pratos" titulo="Pratos" redirect="/admin/cardapio/pratos" />
         </AdminGuard>
       </AuthProvider>
     )
@@ -60,6 +82,16 @@ function App(): React.JSX.Element {
       </AuthProvider>
     )
   }
+
+  if (currentPath === '/admin/cardapio/sobremesas/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddProduto categoriaNome="Sobremesas" titulo="Sobremesas" redirect="/admin/cardapio/sobremesas" />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
   
   if (currentPath === '/admin/cardapio/bebidas') {
     return (
@@ -70,12 +102,42 @@ function App(): React.JSX.Element {
       </AuthProvider>
     )
   }
+
+  if (currentPath === '/admin/cardapio/bebidas/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddProduto categoriaNome="Bebidas" titulo="Bebidas" redirect="/admin/cardapio/bebidas" />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
   
   if (currentPath === '/admin/cardapio/vinhos') {
     return (
       <AuthProvider>
         <AdminGuard>
           <Vinhos />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
+
+  if (currentPath === '/admin/cardapio/vinhos/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddProduto categoriaNome="Vinhos" titulo="Vinhos" redirect="/admin/cardapio/vinhos" />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
+
+  if (currentPath === '/admin/categorias') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminCategorias />
         </AdminGuard>
       </AuthProvider>
     )
