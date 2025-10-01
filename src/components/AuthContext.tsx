@@ -12,6 +12,7 @@ type User = {
 type AuthState = {
   user: User | null
   token: string | null
+  isLoading: boolean
   login: (params: { email: string; senha: string; user_type: 'cliente' | 'funcionario' }) => Promise<void>
   logout: () => void
 }
@@ -21,15 +22,21 @@ const Ctx = createContext<AuthState | undefined>(undefined)
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const t = localStorage.getItem('auth_token')
     if (t) {
       setToken(t)
-      apiFetch<User>('/auth/me').then(setUser).catch(() => {
-        localStorage.removeItem('auth_token')
-        setToken(null)
-      })
+      apiFetch<User>('/auth/me')
+        .then(setUser)
+        .catch(() => {
+          localStorage.removeItem('auth_token')
+          setToken(null)
+        })
+        .finally(() => setIsLoading(false))
+    } else {
+      setIsLoading(false)
     }
   }, [])
 
@@ -41,6 +48,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('auth_token', res.access_token)
     setToken(res.access_token)
     setUser(res.user)
+    
+    // Redirecionamento baseado no tipo de usuário
+    if (res.user.user_type === 'cliente') {
+      window.location.href = '/'
+    } else if (res.user.user_type === 'funcionario') {
+      if (res.user.role === 'admin') {
+        window.location.href = '/admin/cardapio/entradas'
+      } else {
+        window.location.href = '/admin/pedidos/pendentes'
+      }
+    }
   }
 
   const logout = () => {
@@ -50,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.location.href = '/'
   }
 
-  const value = useMemo(() => ({ user, token, login, logout }), [user, token])
+  const value = useMemo(() => ({ user, token, isLoading, login, logout }), [user, token, isLoading])
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }
 
