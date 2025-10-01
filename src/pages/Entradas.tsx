@@ -1,92 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { formatCurrency } from '../lib/utils'
+import { formatCurrency, resolveImageUrl } from '../lib/utils'
 import AdminLayout from '../components/AdminLayout'
 import { Produto, ProdutoStatus } from '../types'
+import { apiFetch } from '../utils/api'
 
 export default function Entradas(): React.JSX.Element {
   const [activeSection, setActiveSection] = useState<string>('cardápio')
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
-  // Dados mockados baseados no design (simulando API)
-  const mockEntradas: Produto[] = [
-    {
-      id: "1",
-      titulo: "Pretzel Clássico",
-      descricao_capa: "Tradicional alemão com mostarda Dijon",
-      descricao_geral: "Serve 1 pessoa",
-      preco: 29.00,
-      status: "Ativo",
-      categoria: { id: "1", nome: "Entradas" },
-      acompanhamentos: [],
-      created_at: "2025-01-01T00:00:00Z",
-      updated_at: "2025-01-01T00:00:00Z",
-      estrelas_kaiserhaus: false
-    },
-    {
-      id: "2",
-      titulo: "Salada",
-      descricao_capa: "Salada fresca com ingredientes selecionados",
-      descricao_geral: "Serve 1 pessoa",
-      preco: 25.00,
-      status: "Ativo",
-      categoria: { id: "1", nome: "Entradas" },
-      acompanhamentos: [],
-      created_at: "2025-01-01T00:00:00Z",
-      updated_at: "2025-01-01T00:00:00Z",
-      estrelas_kaiserhaus: false
-    },
-    {
-      id: "3",
-      titulo: "Salsichas",
-      descricao_capa: "Salsichas alemãs tradicionais",
-      descricao_geral: "Serve 2 pessoas",
-      preco: 18.00,
-      status: "Inativo",
-      categoria: { id: "1", nome: "Entradas" },
-      acompanhamentos: [],
-      created_at: "2025-01-01T00:00:00Z",
-      updated_at: "2025-01-01T00:00:00Z",
-      estrelas_kaiserhaus: false
-    },
-    {
-      id: "4",
-      titulo: "Mini Croquete",
-      descricao_capa: "Croquete de batata crocante",
-      descricao_geral: "Serve 1 pessoa",
-      preco: 15.00,
-      status: "Ativo",
-      categoria: { id: "1", nome: "Entradas" },
-      acompanhamentos: [],
-      created_at: "2025-01-01T00:00:00Z",
-      updated_at: "2025-01-01T00:00:00Z",
-      estrelas_kaiserhaus: false
-    },
-    {
-      id: "5",
-      titulo: "Pão de Alho",
-      descricao_capa: "Pão de alho artesanal",
-      descricao_geral: "Serve 2 pessoas",
-      preco: 12.00,
-      status: "Ativo",
-      categoria: { id: "1", nome: "Entradas" },
-      acompanhamentos: [],
-      created_at: "2025-01-01T00:00:00Z",
-      updated_at: "2025-01-01T00:00:00Z",
-      estrelas_kaiserhaus: false
-    }
-  ]
-
-  // Simular carregamento de dados da API
+  // Carregar dados da API
   useEffect(() => {
-    // TODO: Substituir por chamada real da API
-    // GET /produtos?categoria=entradas
     const loadProdutos = async (): Promise<void> => {
       setLoading(true)
       try {
-        // Simular delay da API
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setProdutos(mockEntradas)
+        const categorias = await apiFetch<Array<{ id: string; nome: string }>>('/categorias')
+        const cat = categorias.find(c => c.nome.toLowerCase() === 'entradas')
+        if (!cat) {
+          setProdutos([])
+        } else {
+          const todos = await apiFetch<Produto[]>('/produtos')
+          setProdutos(todos.filter(p => p.categoria?.id === cat.id))
+        }
       } catch (error) {
         console.error('Erro ao carregar produtos:', error)
       } finally {
@@ -99,19 +34,18 @@ export default function Entradas(): React.JSX.Element {
 
   // Função para alternar status do produto
   const toggleProdutoStatus = async (produtoId: string): Promise<void> => {
-    // TODO: Substituir por chamada real da API
-    // PUT /produtos/{id} com novo status
-    setProdutos(prevProdutos => 
-      prevProdutos.map(produto => 
-        produto.id === produtoId 
-          ? { 
-              ...produto, 
-              status: produto.status === 'Ativo' ? 'Inativo' : 'Ativo' as ProdutoStatus,
-              updated_at: new Date().toISOString()
-            }
-          : produto
-      )
-    )
+    const produtoAtual = produtos.find(p => p.id === produtoId)
+    if (!produtoAtual) return
+    const novoStatus: ProdutoStatus = produtoAtual.status === 'Ativo' ? 'Inativo' : 'Ativo'
+    // Otimista
+    setProdutos(prev => prev.map(p => p.id === produtoId ? { ...p, status: novoStatus, updated_at: new Date().toISOString() } : p))
+    try {
+      await apiFetch(`/produtos/${produtoId}`, { method: 'PUT', body: JSON.stringify({ status: novoStatus }) })
+    } catch (e) {
+      // Reverter em caso de erro
+      setProdutos(prev => prev.map(p => p.id === produtoId ? { ...p, status: produtoAtual.status } : p))
+      console.error('Falha ao atualizar status do produto', e)
+    }
   }
 
   // Função para obter cor do status
@@ -159,9 +93,9 @@ export default function Entradas(): React.JSX.Element {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Entradas</h1>
             <p className="text-gray-600 mt-1">Gerencie as entradas do cardápio</p>
           </div>
-          <button className="px-4 py-2 bg-kaiserhaus-dark-brown text-white rounded-lg hover:bg-kaiserhaus-brown transition-colors font-medium">
+          <a href="/admin/cardapio/entradas/novo" className="px-4 py-2 bg-kaiserhaus-dark-brown text-white rounded-lg hover:bg-kaiserhaus-brown transition-colors font-medium">
             Adicionar Entrada +
-          </button>
+          </a>
         </div>
 
         {/* Lista de produtos */}
@@ -177,10 +111,15 @@ export default function Entradas(): React.JSX.Element {
                 <div key={produto.id} className={`bg-white rounded-lg border shadow-sm p-4 ${produto.status === 'Inativo' ? 'opacity-60' : ''}`}>
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 h-12 w-12">
-                      <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm font-medium">
-                          {produto.titulo.charAt(0)}
-                        </span>
+                      <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+                        {produto.image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={resolveImageUrl(produto.image_url)} alt={produto.titulo} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-gray-500 text-sm font-medium">
+                            {produto.titulo.charAt(0)}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -241,10 +180,15 @@ export default function Entradas(): React.JSX.Element {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-12 w-12">
-                              <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                                <span className="text-gray-500 text-sm font-medium">
-                                  {produto.titulo.charAt(0)}
-                                </span>
+                              <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden">
+                                {produto.image_url ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={resolveImageUrl(produto.image_url)} alt={produto.titulo} className="h-full w-full object-cover" />
+                                ) : (
+                                  <span className="text-gray-500 text-sm font-medium">
+                                    {produto.titulo.charAt(0)}
+                                  </span>
+                                )}
                               </div>
                             </div>
                             <div className="ml-4">
@@ -293,16 +237,6 @@ export default function Entradas(): React.JSX.Element {
           </>
         )}
 
-        {/* TODO: Implementar funcionalidades de backend */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-yellow-800 mb-2">🚧 Integração com Backend Pendente</h3>
-          <div className="text-sm text-yellow-700 space-y-1">
-            <p>• <strong>useEffect:</strong> GET /produtos?categoria=entradas</p>
-            <p>• <strong>toggleProdutoStatus:</strong> PUT /produtos/{`{id}`}</p>
-            <p>• <strong>Adicionar Entrada:</strong> POST /produtos</p>
-            <p>• <strong>Editar:</strong> PUT /produtos/{`{id}`}</p>
-          </div>
-        </div>
       </div>
     </AdminLayout>
   )

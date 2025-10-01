@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { config } from "../config"
 
 // Função utilitária para combinar classes do Tailwind (compatível com Shadcn UI)
 export function cn(...inputs: ClassValue[]): string {
@@ -16,4 +17,10 @@ export const formatCurrency = (value: number): string => {
     style: 'currency',
     currency: 'BRL'
   }).format(value)
+}
+
+export const resolveImageUrl = (path?: string): string => {
+  if (!path) return ''
+  if (path.startsWith('http://') || path.startsWith('https://')) return path
+  return `${config.API_BASE_URL}${path}`
 }

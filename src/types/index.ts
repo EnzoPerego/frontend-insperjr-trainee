@@ -12,6 +12,7 @@ export interface Produto {
   titulo: string;
   descricao_capa?: string;
   descricao_geral?: string;
+  image_url?: string;
   preco: number;
   preco_promocional?: number;
   status: 'Ativo' | 'Inativo' | 'Indisponível';

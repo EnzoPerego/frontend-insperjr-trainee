@@ -41,6 +41,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         { id: "gerenciar", label: "Gerenciar" },
         { id: "adicionar", label: "Adicionar" }
       ]
+    },
+    {
+      title: "Configuração",
+      items: [
+        { id: "categorias", label: "Categorias" }
+      ]
     }
   ]
 
@@ -67,6 +73,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     } else if (section === 'funcionários') {
       // TODO: Implementar páginas de funcionários
       console.log(`Navegar para ${subSection}`)
+    } else if (section === 'configuração' && subSection === 'categorias') {
+      window.location.href = '/admin/categorias'
     }
     
     // Callback para atualizar estado local
