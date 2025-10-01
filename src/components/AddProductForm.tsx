@@ -15,7 +15,7 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
   const [descricaoCapa, setDescricaoCapa] = useState('')
   const [descricaoGeral, setDescricaoGeral] = useState('')
   const [precoInput, setPrecoInput] = useState('')
-  const [acompanhamentos, setAcompanhamentos] = useState<Array<{ nome: string; preco: string }>>([])
+  const [acompanhamentos, setAcompanhamentos] = useState<Array<{ nome: string; precoInput: string }>>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [categoriaId, setCategoriaId] = useState<string | null>(null)
@@ -46,8 +46,8 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
   }
   const precoNumber = useMemo(() => Number(onlyDigits(precoInput)) / 100, [precoInput])
 
-  const addAcompanhamento = () => setAcompanhamentos(prev => [...prev, { nome: '', preco: '' }])
-  const updateAcomp = (idx: number, field: 'nome' | 'preco', value: string) => {
+  const addAcompanhamento = () => setAcompanhamentos(prev => [...prev, { nome: '', precoInput: '' }])
+  const updateAcomp = (idx: number, field: 'nome' | 'precoInput', value: string) => {
     setAcompanhamentos(prev => prev.map((a, i) => i === idx ? { ...a, [field]: value } : a))
   }
   const removeAcomp = (idx: number) => setAcompanhamentos(prev => prev.filter((_, i) => i !== idx))
@@ -77,8 +77,8 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
         status: 'Ativo',
         estrelas_kaiserhaus: false,
         acompanhamentos: acompanhamentos
-          .filter(a => a.nome && a.preco)
-          .map(a => ({ nome: a.nome, preco: Number(a.preco) }))
+          .filter(a => a.nome && a.precoInput)
+          .map(a => ({ nome: a.nome, preco: Number(onlyDigits(a.precoInput)) / 100 }))
       }
       await apiFetch('/produtos', { method: 'POST', body: JSON.stringify(body) })
       window.location.href = onSuccessRedirect
@@ -158,7 +158,13 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
               {acompanhamentos.map((a, idx) => (
                 <div key={idx} className="grid grid-cols-1 sm:grid-cols-5 gap-2">
                   <input className="sm:col-span-3 border rounded p-2" placeholder={`Acompanhamento ${idx+1}`} value={a.nome} onChange={e => updateAcomp(idx, 'nome', e.target.value)} />
-                  <input type="number" step="0.01" className="sm:col-span-1 border rounded p-2" placeholder="Preço" value={a.preco} onChange={e => updateAcomp(idx, 'preco', e.target.value)} />
+                  <input 
+                    inputMode="numeric"
+                    className="sm:col-span-1 border rounded p-2" 
+                    placeholder="R$ 0,00" 
+                    value={formatBRL(onlyDigits(a.precoInput))}
+                    onChange={e => updateAcomp(idx, 'precoInput', onlyDigits(e.target.value))}
+                  />
                   <button type="button" onClick={() => removeAcomp(idx)} className="sm:col-span-1 border rounded p-2">Remover</button>
                 </div>
               ))}
