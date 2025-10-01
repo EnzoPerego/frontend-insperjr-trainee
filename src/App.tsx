@@ -14,6 +14,8 @@ import Login from './pages/Login'
 import CadastroCliente from './pages/CadastroCliente'
 import AdminAddProduto from './pages/AdminAddProduto'
 import AdminCategorias from './pages/AdminCategorias'
+import AdminFuncionarios from './pages/AdminFuncionarios'
+import AdminAddFuncionario from './pages/AdminAddFuncionario'
 
 function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { user } = useAuth()
@@ -138,6 +140,26 @@ function App(): React.JSX.Element {
       <AuthProvider>
         <AdminGuard>
           <AdminCategorias />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
+
+  if (currentPath === '/admin/funcionarios') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminFuncionarios />
+        </AdminGuard>
+      </AuthProvider>
+    )
+  }
+
+  if (currentPath === '/admin/funcionarios/novo') {
+    return (
+      <AuthProvider>
+        <AdminGuard>
+          <AdminAddFuncionario />
         </AdminGuard>
       </AuthProvider>
     )
