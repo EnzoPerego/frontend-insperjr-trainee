@@ -82,7 +82,8 @@ export default function Home(): React.JSX.Element {
                 href="#menu"
                 className="inline-flex items-center mt-6 rounded-md bg-kaiserhaus-dark-brown px-5 py-3 font-semibold text-white shadow hover:opacity-90 transition"
               >
-                Faça seu pedido!
+                Faça seu pedido! 
+                {/* aprendendo como dar pr */}
               </a>
             </div>
           </div>
