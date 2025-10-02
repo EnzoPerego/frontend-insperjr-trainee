@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
 import { useAuth } from './AuthContext'
+import ContactModal from './ContatoModal'
 
 interface HeaderProps {
   className?: string
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+  const [isContactOpen, setIsContactOpen] = useState<boolean>(false)
   const { user, logout } = useAuth()
 
   const toggleMobileMenu = (): void => {
@@ -37,13 +39,13 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
             <a 
               href="#home" 
-              className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Home
             </a>
             <a 
               href="#menu" 
-              className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Cardápio
             </a>
@@ -51,36 +53,36 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
           {/* Logo - Centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <a href="/" className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider hover:text-kaiserhaus-light-brown transition-colors">
+            <a href="/" className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider hover:text-white/80 transition-colors">
               KAISERHAUS
             </a>
           </div>
 
           {/* Right Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
-            <a 
-              href="#contact" 
-              className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+            <button 
+              onClick={() => setIsContactOpen(true)}
+              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Contato
-            </a>
+            </button>
             <a 
               href="#cart" 
-              className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Carrinho
             </a>
             {user ? (
               <button 
                 onClick={logout}
-                className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+                className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
               >
                 Logout
               </button>
             ) : (
               <a 
                 href="/login" 
-                className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm lg:text-base"
+                className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
               >
                 Login
               </a>
@@ -94,35 +96,34 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <nav className="flex flex-col py-4">
               <a 
                 href="#home" 
-                className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium border-b border-kaiserhaus-light-brown"
+                className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
               </a>
               <a 
                 href="#menu" 
-                className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium border-b border-kaiserhaus-light-brown"
+                className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Cardápio
               </a>
-              <a 
-                href="#contact" 
-                className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium border-b border-kaiserhaus-light-brown"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <button 
+                className="px-4 py-3 text-left w-full text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
+                onClick={() => { setIsContactOpen(true); setIsMobileMenuOpen(false) }}
               >
                 Contato
-              </a>
+              </button>
               <a 
                 href="#cart" 
-                className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium border-b border-kaiserhaus-light-brown"
+                className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Carrinho
               </a>
               {user ? (
                 <button 
-                  className="px-4 py-3 text-left w-full text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium"
+                  className="px-4 py-3 text-left w-full text-white hover:text-white/80 transition-colors font-montserrat"
                   onClick={() => { logout(); setIsMobileMenuOpen(false) }}
                 >
                   Logout
@@ -130,7 +131,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               ) : (
                 <a 
                   href="/login" 
-                  className="px-4 py-3 text-white hover:bg-kaiserhaus-light-brown transition-colors font-medium"
+                  className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Login
@@ -140,6 +141,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           </div>
         )}
       </div>
+      <ContactModal open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </header>
   )
 }
