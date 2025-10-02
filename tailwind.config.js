@@ -13,6 +13,9 @@ export default {
           'light-brown': '#9B3A1A',
         }
       },
+      fontFamily: {
+        'montserrat': ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [],
