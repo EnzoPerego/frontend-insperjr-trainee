@@ -9,21 +9,28 @@ import chefComida from "../assets/chef_comida.png";
 import bandeiras from "../assets/bandeiras.png";
 import fundoHome from "../assets/fundo_home.png";
 import wpp from "../assets/wpp.png";
-import { useCart } from "../contexts/CartContext";
 import { apiFetch } from "../utils/api";
+import ProductModal from "../components/ProductModal";
 
 interface Produto {
   id: string;
   titulo: string;
   preco: number;
   preco_promocional?: number;
+  descricao_geral?: string;
+  image_url?: string;
+  acompanhamentos?: Array<{
+    nome: string;
+    preco: number;
+  }>;
 }
 
 export default function Home(): React.JSX.Element {
   const refParalaxe = useRef<HTMLDivElement | null>(null);
   const [deslocamentoParalaxe, setDeslocamentoParalaxe] = useState<number>(-10);
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const { addItem } = useCart();
+  const [modalProduto, setModalProduto] = useState<Produto | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Buscar produtos do backend
   useEffect(() => {
@@ -92,17 +99,16 @@ export default function Home(): React.JSX.Element {
     };
   }, []);
 
-  // Função para adicionar produtos ao carrinho
-  const handleAddToCart = (produto: Produto) => {
-    const itemToAdd = {
-      id: produto.id,
-      titulo: produto.titulo,
-      preco: produto.preco,
-      preco_promocional: produto.preco_promocional,
-      imagem: undefined
-    };
-    addItem(itemToAdd);
-    alert(`${produto.titulo} adicionado ao carrinho!`);
+  // Função para abrir modal do produto
+  const handleOpenProductModal = (produto: Produto) => {
+    setModalProduto(produto);
+    setIsModalOpen(true);
+  };
+
+  // Função para fechar modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalProduto(null);
   };
 
   return (
@@ -176,7 +182,7 @@ export default function Home(): React.JSX.Element {
                       {descricoes[index] || "Descrição do produto"}
                     </p>
                     <button 
-                      onClick={() => handleAddToCart(produto)}
+                      onClick={() => handleOpenProductModal(produto)}
                       className="text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition"
                     >
                       Adicionar ao carrinho →
@@ -430,6 +436,15 @@ export default function Home(): React.JSX.Element {
           </div>
         </div>
       </section>
+
+      {/* Modal do Produto */}
+      {modalProduto && (
+        <ProductModal
+          produto={modalProduto}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </>
   );
 }
