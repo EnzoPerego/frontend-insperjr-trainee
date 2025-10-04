@@ -1,5 +1,6 @@
 import React from 'react'
 import { SidebarProps } from '../types'
+import { useAuth } from './AuthContext'
 
 interface MenuItem {
   id: string
@@ -16,8 +17,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   onSectionChange = () => {},
   onMobileMenuClose = () => {}
 }) => {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
+  
   // Menu items centralizados - reutilizável em todas as páginas admin
-  const menuItems: MenuSection[] = [
+  const allMenuItems: MenuSection[] = [
     {
       title: "Cardápio",
       items: [
@@ -50,6 +54,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   ]
 
+  // Filtrar menu baseado no role do usuário
+  const menuItems = isAdmin 
+    ? allMenuItems 
+    : allMenuItems.filter(section => section.title === "Pedidos")
+
   // Função para lidar com navegação
   const handleNavigation = (section: string, subSection: string): void => {
     // Fechar menu mobile
@@ -70,9 +79,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       window.location.href = '/admin/cardapio/bebidas'
     } else if (section === 'cardápio' && subSection === 'vinhos') {
       window.location.href = '/admin/cardapio/vinhos'
-    } else if (section === 'funcionários') {
-      // TODO: Implementar páginas de funcionários
-      console.log(`Navegar para ${subSection}`)
+    } else if (section === 'funcionários' && subSection === 'gerenciar') {
+      window.location.href = '/admin/funcionarios'
+    } else if (section === 'funcionários' && subSection === 'adicionar') {
+      window.location.href = '/admin/funcionarios/novo'
     } else if (section === 'configuração' && subSection === 'categorias') {
       window.location.href = '/admin/categorias'
     }
@@ -86,8 +96,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Header da sidebar */}
       <div className="mb-6">
         <h2 className="text-lg sm:text-xl font-bold text-kaiserhaus-dark-brown">
-          KAISERHAUS Admin
+          KAISERHAUS {isAdmin ? 'Admin' : 'Funcionário'}
         </h2>
+        {user && (
+          <p className="text-sm text-gray-600 mt-1">
+            Olá, {user.nome}
+          </p>
+        )}
       </div>
       
       {/* Menu de navegação */}
