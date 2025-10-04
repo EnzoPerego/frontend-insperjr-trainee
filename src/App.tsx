@@ -10,12 +10,19 @@ import PedidosPendentes from './pages/PedidosPendentes'
 import PedidosConcluidos from './pages/PedidosConcluidos'
 import './styles/globals.css'
 import { AuthProvider, useAuth } from './components/AuthContext'
+import { CartProvider } from './contexts/CartContext'
 import Login from './pages/Login'
 import CadastroCliente from './pages/CadastroCliente'
 import AdminAddProduto from './pages/AdminAddProduto'
 import AdminCategorias from './pages/AdminCategorias'
+
+import Carrinho from './pages/Carrinho'
+import FormasEntrega from './pages/FormasEntrega'
+import Pagamento from './pages/Pagamento'
+import Cardapio1 from './pages/Cardapio1'
 import AdminFuncionarios from './pages/AdminFuncionarios'
 import AdminAddFuncionario from './pages/AdminAddFuncionario'
+
 
 function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { user, isLoading } = useAuth()
@@ -54,184 +61,184 @@ function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Elem
   return <>{children}</>
 }
 
+function AppProviders({ children }: { children: React.ReactNode }): React.JSX.Element {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        {children}
+      </CartProvider>
+    </AuthProvider>
+  )
+}
+
 function App(): React.JSX.Element {
   // Simulação de roteamento simples - em produção usar React Router
   const currentPath: string = window.location.pathname
   
-  // Rotas do cardápio
-  if (currentPath === '/admin/cardapio/entradas') {
-    return (
-      <AuthProvider>
+  // Função para renderizar conteúdo baseado na rota
+  const renderContent = () => {
+    // Rotas do cardápio
+    if (currentPath === '/admin/cardapio/entradas') {
+      return (
         <AdminGuard>
           <Entradas />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/cardapio/entradas/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/entradas/novo') {
+      return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Entradas" titulo="Entradas" redirect="/admin/cardapio/entradas" />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  if (currentPath === '/admin/cardapio/pratos') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/pratos') {
+      return (
         <AdminGuard>
           <Pratos />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/cardapio/pratos/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/pratos/novo') {
+      return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Pratos" titulo="Pratos" redirect="/admin/cardapio/pratos" />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  if (currentPath === '/admin/cardapio/sobremesas') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/sobremesas') {
+      return (
         <AdminGuard>
           <Sobremesas />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/cardapio/sobremesas/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/sobremesas/novo') {
+      return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Sobremesas" titulo="Sobremesas" redirect="/admin/cardapio/sobremesas" />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  if (currentPath === '/admin/cardapio/bebidas') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/bebidas') {
+      return (
         <AdminGuard>
           <Bebidas />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/cardapio/bebidas/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/bebidas/novo') {
+      return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Bebidas" titulo="Bebidas" redirect="/admin/cardapio/bebidas" />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  if (currentPath === '/admin/cardapio/vinhos') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/vinhos') {
+      return (
         <AdminGuard>
           <Vinhos />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/cardapio/vinhos/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/cardapio/vinhos/novo') {
+      return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Vinhos" titulo="Vinhos" redirect="/admin/cardapio/vinhos" />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/categorias') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/categorias') {
+      return (
         <AdminGuard>
           <AdminCategorias />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/funcionarios') {
-    return (
-      <AuthProvider>
+
+    if (currentPath === '/admin/funcionarios') {
+      return (
         <AdminGuard>
           <AdminFuncionarios />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
 
-  if (currentPath === '/admin/funcionarios/novo') {
-    return (
-      <AuthProvider>
+    if (currentPath === '/admin/funcionarios/novo') {
+      return (
         <AdminGuard>
           <AdminAddFuncionario />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  // Rotas de pedidos
-  if (currentPath === '/admin/pedidos/pendentes') {
-    return (
-      <AuthProvider>
+    // Rotas de pedidos
+    if (currentPath === '/admin/pedidos/pendentes') {
+      return (
         <AdminGuard>
           <PedidosPendentes />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
-  
-  if (currentPath === '/admin/pedidos/concluidos') {
-    return (
-      <AuthProvider>
+      )
+    }
+    
+    if (currentPath === '/admin/pedidos/concluidos') {
+      return (
         <AdminGuard>
           <PedidosConcluidos />
         </AdminGuard>
-      </AuthProvider>
-    )
-  }
+      )
+    }
   
-  if (currentPath === '/login') {
-    return (
-      <AuthProvider>
-        <Login />
-      </AuthProvider>
-    )
-  }
+    if (currentPath === '/login') {
+      return <Login />
+    }
 
-  if (currentPath === '/cadastro') {
-    return (
-      <AuthProvider>
-        <CadastroCliente />
-      </AuthProvider>
-    )
-  }
+    if (currentPath === '/cadastro') {
+      return <CadastroCliente />
+    }
 
-  return (
-    <AuthProvider>
+    // Rota do cardápio
+    if (currentPath === '/cardapio') {
+      return <Cardapio1 />
+    }
+
+    // Rotas do carrinho
+    if (currentPath === '/carrinho') {
+      return <Carrinho />
+    }
+
+    if (currentPath === '/formas-entrega') {
+      return <FormasEntrega />
+    }
+
+    if (currentPath === '/pagamento') {
+      return <Pagamento />
+    }
+
+    // Página padrão (Home)
+    return (
       <Layout>
         <Home />
       </Layout>
-    </AuthProvider>
+    )
+  }
+
+  // Renderizar tudo dentro dos providers
+  return (
+    <AppProviders>
+      {renderContent()}
+    </AppProviders>
   )
 }
 

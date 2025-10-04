@@ -42,7 +42,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
                 Contato
               </a>
               <a 
-                href="#cart" 
+                href="/carrinho" 
                 className="text-white hover:text-kaiserhaus-light-brown transition-colors font-medium text-sm sm:text-base text-center"
               >
                 Carrinho

@@ -17,6 +17,16 @@ const Login: React.FC = () => {
     setError(null)
     try {
       await login({ email, senha, user_type: userType })
+      
+      // Verificar se há intenção de checkout
+      const checkoutIntent = localStorage.getItem('checkoutIntent')
+      if (checkoutIntent && userType === 'cliente') {
+        localStorage.removeItem('checkoutIntent')
+        window.location.href = checkoutIntent
+        return
+      }
+      
+      // Redirecionamento padrão
       if (userType === 'cliente') {
         window.location.href = '/'
       } else {
