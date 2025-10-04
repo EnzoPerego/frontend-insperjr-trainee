@@ -9,10 +9,52 @@ import chefComida from "../assets/chef_comida.png";
 import bandeiras from "../assets/bandeiras.png";
 import fundoHome from "../assets/fundo_home.png";
 import wpp from "../assets/wpp.png";
+import { useCart } from "../contexts/CartContext";
+import { apiFetch } from "../utils/api";
+
+interface Produto {
+  id: string;
+  titulo: string;
+  preco: number;
+  preco_promocional?: number;
+}
 
 export default function Home(): React.JSX.Element {
   const refParalaxe = useRef<HTMLDivElement | null>(null);
   const [deslocamentoParalaxe, setDeslocamentoParalaxe] = useState<number>(-10);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const { addItem } = useCart();
+
+  // Buscar produtos do backend
+  useEffect(() => {
+    const buscarProdutos = async () => {
+      try {
+        const todosProdutos = await apiFetch<Produto[]>('/produtos');
+        
+        if (todosProdutos && todosProdutos.length > 0) {
+          // Pegar os primeiros 3 produtos para exibir na home
+          setProdutos(todosProdutos.slice(0, 3));
+        } else {
+          // produtos fictícios se não houver produtos no banco
+          setProdutos([
+            { id: '507f1f77bcf86cd799439011', titulo: 'Eisbein', preco: 45.90 },
+            { id: '507f1f77bcf86cd799439012', titulo: 'Pretzel Clássico', preco: 18.50 },
+            { id: '507f1f77bcf86cd799439013', titulo: 'Feijoada Completa', preco: 38.90 }
+          ]);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar produtos:', error);
+        //  produtos fictícios em caso de erro
+        setProdutos([
+          { id: '507f1f77bcf86cd799439011', titulo: 'Eisbein', preco: 45.90 },
+          { id: '507f1f77bcf86cd799439012', titulo: 'Pretzel Clássico', preco: 18.50 },
+          { id: '507f1f77bcf86cd799439013', titulo: 'Feijoada Completa', preco: 38.90 }
+        ]);
+      }
+    };
+
+    buscarProdutos();
+  }, []);
 
   useEffect(() => {
     let idAnimacao = 0;
@@ -26,16 +68,16 @@ export default function Home(): React.JSX.Element {
       const alturaElemento = retangulo.height;
       const rolagemY = window.scrollY;
 
-      // progresso de entrada/saída da seção na viewport
+      
       const inicio = topoElementoPagina - alturaViewport;
       const fim = topoElementoPagina + alturaElemento;
       const limitado = Math.min(Math.max(rolagemY - inicio, 0), fim - inicio);
       const progresso = (fim - inicio) > 0 ? limitado / (fim - inicio) : 0;
 
-      // Movimento simétrico em torno do centro da seção (progresso=0.5 -> translate=0)
-      const faixa = 40; // total de deslocamento (±20%)
+      
+      const faixa = 40; 
       let deslocamento = (progresso - 0.5) * faixa * 2;
-      // Limita para evitar expor bordas mesmo em telas muito altas
+      
       deslocamento = Math.max(Math.min(deslocamento, 25), -25);
       setDeslocamentoParalaxe(deslocamento);
 
@@ -49,6 +91,20 @@ export default function Home(): React.JSX.Element {
       window.removeEventListener("resize", atualizar);
     };
   }, []);
+
+  // Função para adicionar produtos ao carrinho
+  const handleAddToCart = (produto: Produto) => {
+    const itemToAdd = {
+      id: produto.id,
+      titulo: produto.titulo,
+      preco: produto.preco,
+      preco_promocional: produto.preco_promocional,
+      imagem: undefined
+    };
+    addItem(itemToAdd);
+    alert(`${produto.titulo} adicionado ao carrinho!`);
+  };
+
   return (
     <>
       {/* Botão WhatsApp Fixo */}
@@ -84,6 +140,7 @@ export default function Home(): React.JSX.Element {
               >
                 Faça seu pedido!
               </a>
+              
             </div>
           </div>
         </div>
@@ -101,53 +158,33 @@ export default function Home(): React.JSX.Element {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Eisbein */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Eisbein</span>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Eisbein</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Joelho de porco defumado, crocante por fora e macio por dentro
-                </p>
-                <button className="text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
-
-            {/* Pretzel Clássico */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Pretzel</span>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Pretzel Clássico</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Tradicional alemão com mostarda Dijon
-                </p>
-                <button className="text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
-
-            {/* Feijoada Completa */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Feijoada</span>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Feijoada Completa</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  O tradicional prato brasileiro com carnes suínas e feijão
-                </p>
-                <button className="text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
+            {produtos.slice(0, 3).map((produto, index) => {
+              const descricoes = [
+                "Joelho de porco defumado, crocante por fora e macio por dentro",
+                "Tradicional alemão com mostarda Dijon",
+                "O tradicional prato brasileiro com carnes suínas e feijão"
+              ];
+              
+              return (
+                <article key={produto.id} className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500">Imagem {produto.titulo}</span>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{produto.titulo}</h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {descricoes[index] || "Descrição do produto"}
+                    </p>
+                    <button 
+                      onClick={() => handleAddToCart(produto)}
+                      className="text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition"
+                    >
+                      Adicionar ao carrinho →
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           <div className="text-center mt-10">

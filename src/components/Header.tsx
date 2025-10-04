@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { cn } from '../lib/utils'
 import { useAuth } from './AuthContext'
+import { useCart } from '../contexts/CartContext'
 import ContactModal from './ContatoModal'
 
 interface HeaderProps {
@@ -11,6 +12,8 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false)
   const { user, logout } = useAuth()
+  const { getTotalItems, isInitialized } = useCart()
+  const cartItemsCount = getTotalItems()
 
   const toggleMobileMenu = (): void => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -44,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               Home
             </a>
             <a 
-              href="#menu" 
+              href="/cardapio" 
               className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Cardápio
@@ -67,10 +70,15 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               Contato
             </button>
             <a 
-              href="#cart" 
-              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
+              href="/carrinho" 
+              className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base flex items-center space-x-2"
             >
-              Carrinho
+              <span>Carrinho</span>
+              {isInitialized && cartItemsCount > 0 && (
+                <span className="bg-white text-kaiserhaus-dark-brown rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {cartItemsCount}
+                </span>
+              )}
             </a>
             {user ? (
               <button 
@@ -102,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 Home
               </a>
               <a 
-                href="#menu" 
+                href="/cardapio" 
                 className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -115,11 +123,16 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 Contato
               </button>
               <a 
-                href="#cart" 
-                className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
+                href="/carrinho" 
+                className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown flex items-center justify-between"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Carrinho
+                <span>Carrinho</span>
+                {isInitialized && cartItemsCount > 0 && (
+                  <span className="bg-white text-kaiserhaus-dark-brown rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                    {cartItemsCount}
+                  </span>
+                )}
               </a>
               {user ? (
                 <button 
