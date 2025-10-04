@@ -138,9 +138,9 @@ const Carrinho: React.FC = () => {
                         <div key={item.id} className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
                      
                           <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                            {item.imagem ? (
+                            {item.image_url ? (
                               <img 
-                                src={item.imagem} 
+                                src={item.image_url} 
                                 alt={item.titulo}
                                 className="w-full h-full object-cover rounded-lg"
                               />

@@ -6,7 +6,9 @@ export interface CartItem {
   preco: number
   preco_promocional?: number
   quantidade: number
-  imagem?: string
+  image_url?: string
+  observacoes?: string
+  acompanhamentos?: { [key: string]: number }
 }
 
 interface CartContextType {
