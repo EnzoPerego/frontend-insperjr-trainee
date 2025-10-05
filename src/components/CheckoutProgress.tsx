@@ -20,7 +20,7 @@ const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ currentStep, classN
           {/* circulo das etapas */}
           <div className="flex flex-col items-center">
             <div className={cn(
-              'w-10 h-10 rounded-full flex items-center justify-center text-base font-bold transition-colors font-montserrat',
+              'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-bold transition-colors font-montserrat',
               currentStep >= step.number
                 ? 'bg-[#F8F1DE] text-kaiserhaus-dark-brown border border-kaiserhaus-dark-brown'
                 : 'border border-kaiserhaus-dark-brown text-kaiserhaus-dark-brown bg-white'
@@ -31,7 +31,7 @@ const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ currentStep, classN
             {/* Nome da etapa abaixo do círculo */}
             <div className="mt-2">
               <span className={cn(
-                'text-sm font-normal font-montserrat',
+                'text-xs sm:text-sm font-normal font-montserrat',
                 currentStep >= step.number
                   ? 'text-kaiserhaus-dark-brown'
                   : 'text-kaiserhaus-dark-brown'
@@ -43,7 +43,7 @@ const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ currentStep, classN
           
           {/* Linha conectora */}
           {index < steps.length - 1 && (
-            <div className="w-8 h-px bg-kaiserhaus-dark-brown mx-4"></div>
+            <div className="w-6 h-px sm:w-8 sm:h-px bg-kaiserhaus-dark-brown mx-2 sm:mx-4"></div>
           )}
         </div>
       ))}

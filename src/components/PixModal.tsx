@@ -24,10 +24,10 @@ const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose, valorTotal, onPaym
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-3 sm:p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-lg md:max-w-xl w-full mx-auto">
         
-        <div className="relative p-4 pb-2">
+        <div className="relative p-3 sm:p-4 pb-2">
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -36,15 +36,15 @@ const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose, valorTotal, onPaym
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <h2 className="text-lg font-bold text-kaiserhaus-dark-brown text-center">
+          <h2 className="text-base sm:text-lg font-bold text-kaiserhaus-dark-brown text-center">
             Pagamento PIX
           </h2>
         </div>
 
-        <div className="px-4 pb-4">
+        <div className="px-3 sm:px-4 pb-4">
           
           <div className="text-center mb-4">
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-xl sm:text-2xl font-bold text-gray-900">
               R$ {formatarValor(valorTotal)}
             </div>
           </div>
@@ -55,7 +55,7 @@ const PixModal: React.FC<PixModalProps> = ({ isOpen, onClose, valorTotal, onPaym
               <img
                 src="/src/assets/QRcode.png"
                 alt="QR Code PIX"
-                className="w-36 h-36"
+                className="w-28 h-28 sm:w-36 sm:h-36"
               />
             </div>
             <p className="text-gray-500 text-xs mt-2">Escaneie com seu app bancário</p>
