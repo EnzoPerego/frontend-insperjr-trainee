@@ -60,7 +60,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
     const itemParaCarrinho = {
       id: produto.id,
       titulo: produto.titulo,
-      preco: precoBase,
+      preco: precoTotal / quantidade, // Preço unitário total (produto + acompanhamentos)
       preco_promocional: produto.preco_promocional,
       image_url: produto.image_url,
       quantidade: quantidade,

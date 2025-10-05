@@ -6,7 +6,7 @@ import { useAuth } from '../components/AuthContext'
 import { criarPedido } from '../services/pedidoService'
 
 interface DeliveryInfo {
-  endereco: {
+  endereco?: {
     rua: string
     numero: string
     bairro: string
@@ -15,6 +15,7 @@ interface DeliveryInfo {
     complemento?: string
   }
   metodo: 'delivery' | 'pickup'
+  addressIndex?: number | null
 }
 
 const Pagamento: React.FC = () => {
@@ -68,7 +69,7 @@ const Pagamento: React.FC = () => {
     try {
       const pedidoData = {
         cliente_id: user.id,
-        endereco_index: 0, // Assumindo que sempre é o primeiro endereço
+        endereco_index: deliveryInfo.addressIndex || 0,
         itens: items.map(item => ({
           produto_id: item.id,
           quantidade: item.quantidade
@@ -79,14 +80,15 @@ const Pagamento: React.FC = () => {
         desconto: 0
       }
 
+
       const pedido = await criarPedido(pedidoData)
       
       // Limpar carrinho e informações de entrega
       clearCart()
       localStorage.removeItem('deliveryInfo')
       
-      alert(`Pedido #${pedido.id} criado com sucesso!`)
-      window.location.href = '/'
+      // Redirecionar para página de confirmação
+      window.location.href = `/pedido-confirmado?id=${pedido.id}`
     } catch (error) {
       console.error('Erro ao criar pedido:', error)
       alert('Erro ao finalizar pedido. Tente novamente.')

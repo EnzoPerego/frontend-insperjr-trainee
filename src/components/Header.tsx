@@ -52,6 +52,14 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             >
               Cardápio
             </a>
+            {user && (
+              <a 
+                href="/meus-pedidos" 
+                className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
+              >
+                Meus Pedidos
+              </a>
+            )}
           </nav>
 
           {/* Logo - Centered */}
@@ -116,6 +124,15 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               >
                 Cardápio
               </a>
+              {user && (
+                <a 
+                  href="/meus-pedidos" 
+                  className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Meus Pedidos
+                </a>
+              )}
               <button 
                 className="px-4 py-3 text-left w-full text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => { setIsContactOpen(true); setIsMobileMenuOpen(false) }}
