@@ -4,6 +4,7 @@ import CheckoutProgress from '../components/CheckoutProgress'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../components/AuthContext'
 import { criarPedido } from '../services/pedidoService'
+import PixModal from '../components/PixModal'
 
 interface DeliveryInfo {
   endereco?: {
@@ -31,6 +32,7 @@ const Pagamento: React.FC = () => {
     expiry: '',
     cvv: ''
   })
+  const [showPixModal, setShowPixModal] = useState(false)
 
   useEffect(() => {
     const savedDeliveryInfo = localStorage.getItem('deliveryInfo')
@@ -65,6 +67,12 @@ const Pagamento: React.FC = () => {
       return
     }
 
+    // Se for PiX, abrir modal ao inves de finalizar diretamente
+    if (paymentMethod === 'pix') {
+      setShowPixModal(true)
+      return
+    }
+
     setLoading(true)
     try {
       const pedidoData = {
@@ -80,6 +88,40 @@ const Pagamento: React.FC = () => {
         desconto: 0
       }
 
+
+      const pedido = await criarPedido(pedidoData)
+      
+      // Limpar carrinho e informações de entrega
+      clearCart()
+      localStorage.removeItem('deliveryInfo')
+      
+      // Redirecionar para página de confirmação
+      window.location.href = `/pedido-confirmado?id=${pedido.id}`
+    } catch (error) {
+      console.error('Erro ao criar pedido:', error)
+      alert('Erro ao finalizar pedido. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePixPaymentConfirmed = async () => {
+    setShowPixModal(false)
+    setLoading(true)
+    
+    try {
+      const pedidoData = {
+        cliente_id: user!.id,
+        endereco_index: deliveryInfo!.addressIndex || 0,
+        itens: items.map(item => ({
+          produto_id: item.id,
+          quantidade: item.quantidade
+        })),
+        metodo_pagamento: 'pix',
+        observacoes: observacoes,
+        taxa_entrega: calculateDeliveryFee(),
+        desconto: 0
+      }
 
       const pedido = await criarPedido(pedidoData)
       
@@ -344,6 +386,14 @@ const Pagamento: React.FC = () => {
 
         </div>
       </div>
+
+      {/* Modal PIX */}
+      <PixModal
+        isOpen={showPixModal}
+        onClose={() => setShowPixModal(false)}
+        valorTotal={calculateTotal()}
+        onPaymentConfirmed={handlePixPaymentConfirmed}
+      />
     </Layout>
   )
 }
