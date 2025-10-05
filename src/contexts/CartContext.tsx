@@ -14,7 +14,7 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[]
   isInitialized: boolean
-  addItem: (item: Omit<CartItem, 'quantidade'>) => void
+  addItem: (item: CartItem) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
@@ -62,16 +62,16 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   }, [items, isInitialized])
 
-  const addItem = (newItem: Omit<CartItem, 'quantidade'>) => {
+  const addItem = (newItem: CartItem) => {
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === newItem.id)
       return existingItem
         ? prevItems.map(item =>
             item.id === newItem.id
-              ? { ...item, quantidade: item.quantidade + 1 }
+              ? { ...item, quantidade: item.quantidade + newItem.quantidade }
               : item
           )
-        : [...prevItems, { ...newItem, quantidade: 1 }]
+        : [...prevItems, newItem]
     })
   }
 

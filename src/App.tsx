@@ -19,6 +19,8 @@ import AdminCategorias from './pages/AdminCategorias'
 import Carrinho from './pages/Carrinho'
 import FormasEntrega from './pages/FormasEntrega'
 import Pagamento from './pages/Pagamento'
+import PedidoConfirmado from './pages/PedidoConfirmado'
+import MeusPedidos from './pages/MeusPedidos'
 import Cardapio1 from './pages/Cardapio1'
 import AdminFuncionarios from './pages/AdminFuncionarios'
 import AdminAddFuncionario from './pages/AdminAddFuncionario'
@@ -224,6 +226,14 @@ function App(): React.JSX.Element {
 
     if (currentPath === '/pagamento') {
       return <Pagamento />
+    }
+
+    if (currentPath === '/pedido-confirmado') {
+      return <PedidoConfirmado />
+    }
+
+    if (currentPath === '/meus-pedidos') {
+      return <MeusPedidos />
     }
 
     // Página padrão (Home)
