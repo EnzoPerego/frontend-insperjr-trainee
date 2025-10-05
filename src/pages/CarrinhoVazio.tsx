@@ -26,7 +26,7 @@ const CarrinhoVazio: React.FC = () => {
           </div>
 
        
-          <div className="max-w-md mx-auto">
+          <div className="max-w-lg sm:max-w-2xl mx-auto">
             <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm mb-6">
               <button 
                 onClick={() => window.history.back()}
@@ -53,7 +53,7 @@ const CarrinhoVazio: React.FC = () => {
                 <img 
                   src={carrinhoVazioImg} 
                   alt="Carrinho vazio" 
-                  className="w-16 h-16"
+                  className="w-20 h-20 sm:w-24 sm:h-24"
                 />
               </div>
               

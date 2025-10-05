@@ -80,32 +80,32 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
   const preco = produto.preco_promocional || produto.preco
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex min-h-[500px]">
+        <div className="flex flex-col md:flex-row min-h-[400px] md:min-h-[500px]">
           {/* Imagem  */}
-          <div className="w-1/2 p-6 flex items-center">
+          <div className="w-full md:w-1/2 p-4 md:p-6 flex items-center">
             {produto.image_url ? (
               <img
                 src={produto.image_url}
                 alt={produto.titulo}
-                className="w-full h-full max-h-[500px] object-cover rounded-lg"
+                className="w-full h-full max-h-[300px] md:max-h-[500px] object-cover rounded-lg"
               />
             ) : (
-              <div className="w-full h-full max-h-[500px] bg-gray-200 rounded-lg flex items-center justify-center">
+              <div className="w-full h-full max-h-[300px] md:max-h-[500px] bg-gray-200 rounded-lg flex items-center justify-center">
                 <span className="text-gray-500">Sem imagem</span>
               </div>
             )}
           </div>
 
           {/* Conteudoo */}
-          <div className="w-1/2 p-6">
+          <div className="w-full md:w-1/2 p-4 md:p-6">
             {/* Nome e preço do Produto */}
-            <div className="mb-6">
+            <div className="mb-4 md:mb-6">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-2xl font-bold text-gray-900">{produto.titulo}</h2>
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900">{produto.titulo}</h2>
                     <span className="text-xl font-montserrat font-light text-kaiserhaus-dark-brown">
                       {Math.floor(preco)}
                     </span>
