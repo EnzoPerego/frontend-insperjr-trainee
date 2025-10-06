@@ -13,6 +13,8 @@ import { AuthProvider, useAuth } from './components/AuthContext'
 import { CartProvider } from './contexts/CartContext'
 import Login from './pages/Login'
 import CadastroCliente from './pages/CadastroCliente'
+import EsqueciMinhaSenha from './pages/EsqueciMinhaSenha'
+import RedefinirSenha from './pages/RedefinirSenha'
 import AdminAddProduto from './pages/AdminAddProduto'
 import AdminCategorias from './pages/AdminCategorias'
 
@@ -209,6 +211,14 @@ function App(): React.JSX.Element {
 
     if (currentPath === '/cadastro') {
       return <CadastroCliente />
+    }
+
+    if (currentPath === '/esqueci-minha-senha') {
+      return <EsqueciMinhaSenha />
+    }
+
+    if (currentPath === '/redefinir-senha') {
+      return <RedefinirSenha />
     }
 
     // Rota do cardápio
