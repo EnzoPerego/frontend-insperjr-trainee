@@ -112,8 +112,7 @@ const PedidoConfirmado: React.FC<PedidoConfirmadoProps> = ({ pedidoId }) => {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -151,21 +150,21 @@ const PedidoConfirmado: React.FC<PedidoConfirmadoProps> = ({ pedidoId }) => {
                 </div>
 
                 {/* Informações do Pedido */}
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <h3 className="font-semibold text-gray-900 mb-2 text-sm">Detalhes do Pedido</h3>
-                  <div className="space-y-1 text-xs">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 text-sm">Detalhes do Pedido</h3>
+                  <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Número do pedido:</span>
-                      <span className="font-medium">#{pedido.id.slice(-8)}</span>
+                      <span className="font-medium text-gray-900">#{pedido.id.slice(-8)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total:</span>
-                      <span className="font-medium">R$ {pedido.total.toFixed(2).replace('.', ',')}</span>
+                      <span className="font-medium text-kaiserhaus-dark-brown">R$ {pedido.total.toFixed(2).replace('.', ',')}</span>
                     </div>
                     {pedido.metodo_pagamento && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Pagamento:</span>
-                        <span className="font-medium">
+                        <span className="font-medium text-gray-900">
                           {pedido.metodo_pagamento === 'cash' ? 'Dinheiro' : 
                            pedido.metodo_pagamento === 'credit' ? 'Cartão de Crédito' :
                            pedido.metodo_pagamento === 'debit' ? 'Cartão de Débito' :
@@ -177,7 +176,7 @@ const PedidoConfirmado: React.FC<PedidoConfirmadoProps> = ({ pedidoId }) => {
                     {pedido.created_at && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Data:</span>
-                        <span className="font-medium">
+                        <span className="font-medium text-gray-900">
                           {new Date(pedido.created_at).toLocaleDateString('pt-BR', {
                             day: '2-digit',
                             month: '2-digit',

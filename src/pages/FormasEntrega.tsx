@@ -240,8 +240,8 @@ const FormasEntrega: React.FC = () => {
                         Adicionar novo endereço
                       </h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="md:col-span-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
                             Rua *
                           </label>
@@ -306,7 +306,7 @@ const FormasEntrega: React.FC = () => {
                           />
                         </div>
                         
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
                             Complemento
                           </label>

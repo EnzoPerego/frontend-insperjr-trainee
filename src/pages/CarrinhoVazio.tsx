@@ -26,7 +26,7 @@ const CarrinhoVazio: React.FC = () => {
           </div>
 
        
-          <div className="max-w-lg sm:max-w-2xl mx-auto">
+          <div className="max-w-md sm:max-w-lg mx-auto">
             <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm mb-6">
               <button 
                 onClick={() => window.history.back()}
@@ -96,7 +96,7 @@ const CarrinhoVazio: React.FC = () => {
           </div>
 
     
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h1 className="text-2xl font-bold text-kaiserhaus-dark-brown mb-6">
                 Meu carrinho
