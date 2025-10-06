@@ -61,38 +61,79 @@ export default function AdminFuncionarios(): React.JSX.Element {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-kaiserhaus-dark-brown"></div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perfil</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criado em</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {items.map((f) => (
-                    <tr key={f.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.nome}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{f.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${f.status === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
-                          {f.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{f.created_at ? new Date(f.created_at).toLocaleDateString('pt-BR') : '-'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button onClick={() => deleteFuncionario(f.id)} className="px-3 py-1.5 rounded-md text-red-700 bg-red-50 hover:bg-red-100 transition-colors">Excluir</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <>
+            {/* Cards Mobile (sm) */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {items.map((f) => (
+                <div key={f.id} className="bg-white rounded-lg border shadow-sm p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-gray-900 truncate">{f.nome}</h3>
+                      <p className="text-sm text-gray-600 truncate">{f.email}</p>
+                    </div>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ml-2 flex-shrink-0 ${f.status === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                      {f.status}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm text-gray-600 mb-4">
+                    <div>
+                      <span className="font-medium">Criado em:</span>
+                      <span className="ml-2">{f.created_at ? new Date(f.created_at).toLocaleDateString('pt-BR') : '-'}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={() => deleteFuncionario(f.id)} 
+                      className="px-3 py-1.5 rounded-md text-red-700 bg-red-50 hover:bg-red-100 transition-colors text-sm font-medium"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {items.length === 0 && (
+                <div className="bg-white rounded-lg border shadow-sm p-6 text-center">
+                  <p className="text-gray-500">Nenhum funcionário encontrado.</p>
+                </div>
+              )}
             </div>
-          </div>
+
+            {/* Tabela Desktop/Tablet (md+) */}
+            <div className="hidden md:block bg-white rounded-lg shadow-sm border">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perfil</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criado em</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {items.map((f) => (
+                      <tr key={f.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.nome}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{f.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${f.status === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {f.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{f.created_at ? new Date(f.created_at).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <button onClick={() => deleteFuncionario(f.id)} className="px-3 py-1.5 rounded-md text-red-700 bg-red-50 hover:bg-red-100 transition-colors">Excluir</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </AdminLayout>

@@ -135,51 +135,57 @@ const Carrinho: React.FC = () => {
                     {items.map((item) => {
                       const price = item.preco_promocional || item.preco
                       return (
-                        <div key={item.id} className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
-                     
-                          <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                            {item.image_url ? (
-                              <img 
-                                src={item.image_url} 
-                                alt={item.titulo}
-                                className="w-full h-full object-cover rounded-lg"
-                              />
-                            ) : (
-                              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            )}
-                          </div>
+                        <div key={item.id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                          <div className="flex items-center gap-4">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                              {item.image_url ? (
+                                <img 
+                                  src={item.image_url} 
+                                  alt={item.titulo}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              ) : (
+                                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                              )}
+                            </div>
 
-                   
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-kaiserhaus-dark-brown mb-1">
-                              {item.titulo}
-                            </h3>
-                            <p className="text-lg font-bold text-kaiserhaus-dark-brown">
-                              {formatCurrency(price)}
-                            </p>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-semibold text-kaiserhaus-dark-brown mb-1 truncate">
+                                {item.titulo}
+                              </h3>
+                              <p className="text-lg font-bold text-kaiserhaus-dark-brown">
+                                {formatCurrency(price)}
+                              </p>
+                            </div>
                           </div>
                           
-                      
-                          <div className="flex items-center space-x-3">
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantidade - 1)}
-                              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                              </svg>
-                            </button>
-                            <span className="w-8 text-center font-medium">{item.quantidade}</span>
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantidade + 1)}
-                              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                              </svg>
-                            </button>
+                          <div className="flex items-center justify-between sm:justify-end gap-4">
+                            <div className="flex items-center space-x-3">
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantidade - 1)}
+                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                </svg>
+                              </button>
+                              <span className="w-8 text-center font-medium">{item.quantidade}</span>
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantidade + 1)}
+                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                              </button>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-kaiserhaus-dark-brown">
+                                {formatCurrency(price * item.quantidade)}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )
