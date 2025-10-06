@@ -11,6 +11,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const { user, logout } = useAuth()
   const { getTotalItems, isInitialized } = useCart()
   const cartItemsCount = getTotalItems()
@@ -19,10 +20,18 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
-  return (
-    <header className={cn('bg-kaiserhaus-dark-brown text-white', className)}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 relative">
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchTerm.trim()) {
+      window.location.href = `/busca?q=${encodeURIComponent(searchTerm.trim())}`
+    }
+  }
+
+    return (
+      <header className={cn('bg-kaiserhaus-dark-brown text-white', className)}>
+        <div className="container mx-auto px-4">
+          {/* Primeira linha,   sempre visível */}
+          <div className="flex items-center justify-between h-16 relative">
           {/* Mobile Menu Button */}
           <button 
             onClick={toggleMobileMenu}
@@ -62,6 +71,29 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             )}
           </nav>
 
+          {/* Barra de busca ,   sempre visível */}
+          <div className="hidden lg:flex flex-1 max-w-md mx-8">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar produtos..."
+                  className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
+                />
+                <button
+                  type="submit"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
           {/* Logo - Centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
             <a href="/" className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider hover:text-white/80 transition-colors">
@@ -70,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           </div>
 
           {/* Right Navigation - Hidden on mobile */}
-          <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
+          <nav className="hidden md:flex items-center space-x-3 lg:space-x-4">
             <button 
               onClick={() => setIsContactOpen(true)}
               className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
@@ -104,11 +136,36 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               </a>
             )}
           </nav>
+          </div>
         </div>
 
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-kaiserhaus-dark-brown border-t border-kaiserhaus-light-brown shadow-lg z-50">
+            {/* pesquisa para mobile */}
+            <div className="p-4 border-b border-kaiserhaus-light-brown">
+              <form onSubmit={handleSearch}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Buscar produtos..."
+                    className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+            
             <nav className="flex flex-col py-4">
               <a 
                 href="#home" 
@@ -170,7 +227,6 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </nav>
           </div>
         )}
-      </div>
       <ContactModal open={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </header>
   )

@@ -22,6 +22,7 @@ import Pagamento from './pages/Pagamento'
 import PedidoConfirmado from './pages/PedidoConfirmado'
 import MeusPedidos from './pages/MeusPedidos'
 import Cardapio1 from './pages/Cardapio1'
+import Busca from './pages/Busca'
 import AdminFuncionarios from './pages/AdminFuncionarios'
 import AdminAddFuncionario from './pages/AdminAddFuncionario'
 
@@ -213,6 +214,11 @@ function App(): React.JSX.Element {
     // Rota do cardápio
     if (currentPath === '/cardapio') {
       return <Cardapio1 />
+    }
+
+    // Rota de busca
+    if (currentPath === '/busca') {
+      return <Busca />
     }
 
     // Rotas do carrinho
