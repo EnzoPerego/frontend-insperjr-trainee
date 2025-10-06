@@ -46,9 +46,36 @@ const Pagamento: React.FC = () => {
   }
 
   const handleCardDataChange = (field: string, value: string) => {
+    let formattedValue = value
+
+    // Formatação automática para o número do cartão
+    if (field === 'number') {
+      // Remove todos os caracteres não numéricos
+      formattedValue = value.replace(/\D/g, '')
+      // Adiciona espaços a cada 4 dígitos
+      formattedValue = formattedValue.replace(/(\d{4})(?=\d)/g, '$1 ')
+      // Limita a 19 caracteres (16 dígitos + 3 espaços)
+      formattedValue = formattedValue.substring(0, 19)
+    }
+
+    // Formatação automática para a validade (MM/AA)
+    if (field === 'expiry') {
+      // Remove todos os caracteres não numéricos
+      formattedValue = value.replace(/\D/g, '')
+      // Adiciona barra após 2 dígitos
+      if (formattedValue.length >= 2) {
+        formattedValue = formattedValue.substring(0, 2) + '/' + formattedValue.substring(2, 4)
+      }
+    }
+
+    // Formatação automática para o CVV (apenas números, máximo 4 dígitos)
+    if (field === 'cvv') {
+      formattedValue = value.replace(/\D/g, '').substring(0, 4)
+    }
+
     setCardData(prev => ({
       ...prev,
-      [field]: value
+      [field]: formattedValue
     }))
   }
 
@@ -61,9 +88,51 @@ const Pagamento: React.FC = () => {
     return getTotalPrice() + calculateDeliveryFee()
   }
 
+  const validateCardData = () => {
+    if (paymentMethod === 'credit' || paymentMethod === 'debit') {
+      if (!cardData.number.trim()) {
+        alert('Por favor, preencha o número do cartão')
+        return false
+      }
+      if (!cardData.name.trim()) {
+        alert('Por favor, preencha o nome no cartão')
+        return false
+      }
+      if (!cardData.expiry.trim()) {
+        alert('Por favor, preencha a validade do cartão')
+        return false
+      }
+      if (!cardData.cvv.trim()) {
+        alert('Por favor, preencha o CVV do cartão')
+        return false
+      }
+      
+      // Validação básica do formato
+      const cardNumber = cardData.number.replace(/\s/g, '')
+      if (cardNumber.length < 13 || cardNumber.length > 19) {
+        alert('Número do cartão deve ter entre 13 e 19 dígitos')
+        return false
+      }
+      if (cardData.expiry.length !== 5 || !cardData.expiry.includes('/')) {
+        alert('Formato de validade inválido (use MM/AA)')
+        return false
+      }
+      if (cardData.cvv.length < 3 || cardData.cvv.length > 4) {
+        alert('CVV deve ter entre 3 e 4 dígitos')
+        return false
+      }
+    }
+    return true
+  }
+
   const handleFinalizeOrder = async () => {
     if (!user || !deliveryInfo || items.length === 0) {
       alert('Dados incompletos para finalizar o pedido')
+      return
+    }
+
+    // Validar dados do cartão se necessário
+    if (!validateCardData()) {
       return
     }
 
