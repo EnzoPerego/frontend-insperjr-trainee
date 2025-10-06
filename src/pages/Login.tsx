@@ -121,7 +121,7 @@ const Login: React.FC = () => {
                 </button>
                 <div className="space-y-2 pb-6 text-sm">
                   <div className="text-center">
-                    <span className="text-gray-500">Esqueceu a senha? Fale com o administrador.</span>
+                    <a href="/esqueci-minha-senha" className="text-kaiserhaus-dark-brown hover:underline">Esqueci minha senha</a>
                   </div>
                   <div className="text-center">
                     <a href="/cadastro" className="text-kaiserhaus-dark-brown hover:underline">Criar conta como cliente</a>
