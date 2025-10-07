@@ -1,6 +1,7 @@
 import { apiFetch } from '../utils/api'
 
 export interface EnderecoData {
+  id?: string
   rua: string
   numero: string
   bairro: string
@@ -43,4 +44,13 @@ export async function adicionarEndereco(clienteId: string, endereco: EnderecoDat
     method: 'POST',
     body: JSON.stringify(endereco)
   })
+}
+
+// funcao para conseguir deletar o endereco, que ja existe noo back, entao chamei a rota do metodo delete
+export async function removerEndereco(clienteId: string, enderecoId: string): Promise<ClienteResponse> {
+  await apiFetch(`/clientes/${clienteId}/enderecos/${enderecoId}`, {
+    method: 'DELETE'
+  })
+  // Retornar os dados atualizados do cliente
+  return buscarCliente(clienteId)
 }
