@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import { useAuth } from '../components/AuthContext'
 import { apiFetch } from '../utils/api'
-import { buscarCliente, atualizarCliente, removerEndereco, adicionarEndereco, ClienteResponse, EnderecoData } from '../services/clienteService'
+import { buscarCliente, atualizarCliente, removerEndereco, adicionarEndereco, atualizarEndereco, ClienteResponse, EnderecoData } from '../services/clienteService'
 
 interface Pedido {
   id: string
@@ -26,6 +26,7 @@ const PerfilCliente: React.FC = () => {
     telefone: ''
   })
   const [showAddressForm, setShowAddressForm] = useState(false)
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null)
   const [newAddress, setNewAddress] = useState<EnderecoData>({
     rua: '',
     numero: '',
@@ -129,6 +130,59 @@ const PerfilCliente: React.FC = () => {
       console.error('Erro ao adicionar endereço:', err)
       setError('Erro ao adicionar endereço')
     }
+  }
+
+  const handleEditAddress = (endereco: EnderecoData) => {
+    setEditingAddressId(endereco.id || null)
+    setNewAddress({
+      rua: endereco.rua,
+      numero: endereco.numero,
+      bairro: endereco.bairro,
+      cidade: endereco.cidade,
+      cep: endereco.cep,
+      complemento: endereco.complemento || ''
+    })
+    setShowAddressForm(true)
+  }
+
+  const handleUpdateAddress = async () => {
+    if (!user || !editingAddressId) return
+
+    if (!newAddress.rua || !newAddress.numero || !newAddress.bairro || !newAddress.cidade || !newAddress.cep) {
+      alert('Por favor, preencha todos os campos obrigatórios')
+      return
+    }
+
+    try {
+      const updatedCliente = await atualizarEndereco(user.id, editingAddressId, newAddress)
+      setCliente(updatedCliente)
+      setShowAddressForm(false)
+      setEditingAddressId(null)
+      setNewAddress({
+        rua: '',
+        numero: '',
+        bairro: '',
+        cidade: '',
+        cep: '',
+        complemento: ''
+      })
+    } catch (err) {
+      console.error('Erro ao atualizar endereço:', err)
+      setError('Erro ao atualizar endereço')
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setShowAddressForm(false)
+    setEditingAddressId(null)
+    setNewAddress({
+      rua: '',
+      numero: '',
+      bairro: '',
+      cidade: '',
+      cep: '',
+      complemento: ''
+    })
   }
 
   const getStatusColor = (status: string) => {
@@ -523,7 +577,16 @@ const PerfilCliente: React.FC = () => {
                               </div>
                             </div>
                             
-                            <div className="ml-6">
+                            <div className="ml-6 flex space-x-2">
+                              <button
+                                onClick={() => handleEditAddress(endereco)}
+                                className="bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors flex items-center gap-2"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                Editar
+                              </button>
                               <button
                                 onClick={() => endereco.id && handleRemoveAddress(endereco.id)}
                                 className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -556,20 +619,10 @@ const PerfilCliente: React.FC = () => {
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Adicionar Novo Endereço
+                          {editingAddressId ? 'Editar Endereço' : 'Adicionar Novo Endereço'}
                         </h3>
                         <button
-                          onClick={() => {
-                            setShowAddressForm(false)
-                            setNewAddress({
-                              rua: '',
-                              numero: '',
-                              bairro: '',
-                              cidade: '',
-                              cep: '',
-                              complemento: ''
-                            })
-                          }}
+                          onClick={handleCancelEdit}
                           className="text-gray-500 hover:text-gray-700"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -660,26 +713,16 @@ const PerfilCliente: React.FC = () => {
                       
                       <div className="flex justify-end space-x-3 pt-4">
                         <button
-                          onClick={() => {
-                            setShowAddressForm(false)
-                            setNewAddress({
-                              rua: '',
-                              numero: '',
-                              bairro: '',
-                              cidade: '',
-                              cep: '',
-                              complemento: ''
-                            })
-                          }}
+                          onClick={handleCancelEdit}
                           className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-colors"
                         >
                           Cancelar
                         </button>
                         <button
-                          onClick={handleAddAddress}
+                          onClick={editingAddressId ? handleUpdateAddress : handleAddAddress}
                           className="bg-kaiserhaus-dark-brown text-white px-6 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
                         >
-                          Salvar Endereço
+                          {editingAddressId ? 'Atualizar Endereço' : 'Salvar Endereço'}
                         </button>
                       </div>
                     </div>
