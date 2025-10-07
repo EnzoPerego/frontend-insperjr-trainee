@@ -1,44 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import AdminLayout from './AdminLayout'
-import ProductImagePreview from './ProductImagePreview'
 import { apiFetch } from '../utils/api'
 import { config } from '../config'
+import { resolveImageUrl } from '../lib/utils'
+import ProductImagePreview from './ProductImagePreview'
 
 type Props = {
   title: string
   categoriaNome: string
   onSuccessRedirect: string
+  productId: string
 }
 
-export default function AddProductForm({ title, categoriaNome, onSuccessRedirect }: Props): React.JSX.Element {
+export default function EditProductForm({ title, categoriaNome, onSuccessRedirect, productId }: Props): React.JSX.Element {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [titulo, setTitulo] = useState('')
   const [descricaoCapa, setDescricaoCapa] = useState('')
   const [descricaoGeral, setDescricaoGeral] = useState('')
   const [precoInput, setPrecoInput] = useState('')
+  const [precoPromocionalInput, setPrecoPromocionalInput] = useState('')
   const [acompanhamentos, setAcompanhamentos] = useState<Array<{ nome: string; precoInput: string }>>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [categoriaId, setCategoriaId] = useState<string | null>(null)
-  // Controles de imagem moved to ProductImagePreview
+  const [currentImageUrl, setCurrentImageUrl] = useState<string>('')
 
-  // Buscar ID real da categoria por nome
-  useEffect(() => {
-    const loadCategoria = async () => {
-      try {
-        const categorias = await apiFetch<Array<{ id: string; nome: string }>>('/categorias')
-        const found = categorias.find(c => c.nome.toLowerCase() === categoriaNome.toLowerCase())
-        if (!found) {
-          setError(`Categoria '${categoriaNome}' não encontrada`)
-        } else {
-          setCategoriaId(found.id)
-        }
-      } catch (e: any) {
-        setError(e?.message || 'Falha ao carregar categorias')
-      }
-    }
-    loadCategoria()
-  }, [categoriaNome])
+  // Controles de imagem moved to ProductImagePreview
 
   // Helpers de preço (máscara em BRL)
   const onlyDigits = (v: string) => (v || '').replace(/\D+/g, '')
@@ -47,6 +34,10 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
     return (n / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
   const precoNumber = useMemo(() => Number(onlyDigits(precoInput)) / 100, [precoInput])
+  const precoPromocionalNumber = useMemo(() => {
+    const d = onlyDigits(precoPromocionalInput)
+    return d ? Number(d) / 100 : undefined
+  }, [precoPromocionalInput])
 
   const addAcompanhamento = () => setAcompanhamentos(prev => [...prev, { nome: '', precoInput: '' }])
   const updateAcomp = (idx: number, field: 'nome' | 'precoInput', value: string) => {
@@ -54,13 +45,48 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
   }
   const removeAcomp = (idx: number) => setAcompanhamentos(prev => prev.filter((_, i) => i !== idx))
 
+  // Carregar produto e categoria por nome
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const categorias = await apiFetch<Array<{ id: string; nome: string }>>('/categorias')
+        const found = categorias.find(c => c.nome.toLowerCase() === categoriaNome.toLowerCase())
+        if (!found) {
+          throw new Error(`Categoria '${categoriaNome}' não encontrada`)
+        }
+        setCategoriaId(found.id)
+
+        const prod = await apiFetch<any>(`/produtos/${productId}`)
+        setTitulo(prod.titulo || '')
+        setDescricaoCapa(prod.descricao_capa || '')
+        setDescricaoGeral(prod.descricao_geral || '')
+        setCurrentImageUrl(prod.image_url || '')
+        setPrecoInput(String(Math.round(Number(prod.preco || 0) * 100)))
+        if (prod.preco_promocional != null) {
+          setPrecoPromocionalInput(String(Math.round(Number(prod.preco_promocional) * 100)))
+        } else {
+          setPrecoPromocionalInput('')
+        }
+        const acomp = Array.isArray(prod.acompanhamentos) ? prod.acompanhamentos : []
+        setAcompanhamentos(acomp.map((a: any) => ({ nome: a.nome || '', precoInput: String(Math.round(Number(a.preco || 0) * 100)) })))
+      } catch (e: any) {
+        setError(e?.message || 'Falha ao carregar produto')
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [categoriaNome, productId])
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
     try {
       if (!categoriaId) throw new Error('Categoria não carregada')
-      let finalImageUrl = ''
+      let finalImageUrl = currentImageUrl
       if (imageFile) {
         const form = new FormData()
         form.append('file', imageFile)
@@ -76,32 +102,34 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
         descricao_geral: descricaoGeral,
         image_url: finalImageUrl || undefined,
         preco: precoNumber,
-        status: 'Ativo',
-        estrelas_kaiserhaus: false,
+        preco_promocional: precoPromocionalNumber,
         acompanhamentos: acompanhamentos
           .filter(a => a.nome && a.precoInput)
           .map(a => ({ nome: a.nome, preco: Number(onlyDigits(a.precoInput)) / 100 }))
       }
-      await apiFetch('/produtos', { method: 'POST', body: JSON.stringify(body) })
-      window.location.href = onSuccessRedirect
+      await apiFetch(`/produtos/${productId}`, { method: 'PUT', body: JSON.stringify(body) })
+      if (window.history.length > 1) {
+        window.history.back()
+      } else {
+        window.location.href = onSuccessRedirect
+      }
     } catch (err: any) {
-      setError(err?.message || 'Erro ao adicionar produto')
+      setError(err?.message || 'Erro ao salvar produto')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <AdminLayout title={`Adicionar ${title}`}>
+    <AdminLayout title={`Editar ${title}`}>
       <div className="bg-white rounded-2xl shadow border p-6">
         <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
-            {/* Pré-visualização do card do produto */}
             <ProductImagePreview
               title={titulo}
               descricaoCapa={descricaoCapa}
               precoDisplay={precoInput ? formatBRL(onlyDigits(precoInput)) : 'R$ 0,00'}
-              previewSrc={imageFile ? URL.createObjectURL(imageFile) : undefined}
+              previewSrc={imageFile ? URL.createObjectURL(imageFile) : (currentImageUrl ? resolveImageUrl(currentImageUrl) : undefined)}
               placeholderChar={titulo.charAt(0) || '?'}
             />
             <p className="text-xs text-gray-500 mt-2 text-center">Pré-visualização do produto</p>
@@ -118,7 +146,7 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
                     </svg>
                   </div>
                   <div className="text-sm text-gray-700">
-                    {imageFile ? imageFile.name : 'Clique para escolher uma imagem do seu computador'}
+                    {imageFile ? imageFile.name : (currentImageUrl ? 'Imagem carregada. Clique para trocar' : 'Clique para escolher uma imagem do seu computador')}
                   </div>
                 </div>
                 <span className="text-sm px-3 py-1.5 bg-kaiserhaus-dark-brown text-white rounded-md">Selecionar</span>
@@ -148,6 +176,17 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
                 onChange={(e) => setPrecoInput(onlyDigits(e.target.value))}
                 required
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Preço promocional (opcional)</label>
+              <input
+                inputMode="numeric"
+                className="w-full border rounded p-2"
+                placeholder="R$ 0,00"
+                value={formatBRL(onlyDigits(precoPromocionalInput))}
+                onChange={(e) => setPrecoPromocionalInput(onlyDigits(e.target.value))}
+              />
+              <p className="text-xs text-gray-500 mt-1">Deixe em branco para não aplicar promoção.</p>
             </div>
 
             <div className="space-y-3">
@@ -207,7 +246,7 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
 
             {error && <div className="text-sm text-red-600">{error}</div>}
             <button disabled={loading || !categoriaId} className="w-full md:w-auto px-4 py-2 bg-kaiserhaus-dark-brown text-white rounded hover:opacity-90 disabled:opacity-60">
-              {loading ? 'Salvando...' : (!categoriaId ? 'Carregando categoria...' : 'Adicionar Produto')}
+              {loading ? 'Salvando...' : (!categoriaId ? 'Carregando categoria...' : 'Salvar alterações')}
             </button>
           </div>
         </form>

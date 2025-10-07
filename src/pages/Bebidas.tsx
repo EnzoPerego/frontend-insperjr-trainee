@@ -136,9 +136,9 @@ export default function Bebidas(): React.JSX.Element {
                           >
                             {produto.status === 'Ativo' ? 'Desativar' : 'Ativar'}
                           </button>
-                          <button className="px-3 py-1.5 rounded-md text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+                          <a href={`/admin/cardapio/bebidas/editar?id=${produto.id}`} className="px-3 py-1.5 rounded-md text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
                             Editar
-                          </button>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -203,7 +203,7 @@ export default function Bebidas(): React.JSX.Element {
                             <span className="ml-1">{produto.status}</span>
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center gap-2">
                           <button
                             onClick={() => toggleProdutoStatus(produto.id)}
                             className={`p-2 rounded-lg transition-colors ${
@@ -215,11 +215,11 @@ export default function Bebidas(): React.JSX.Element {
                           >
                             {getStatusIcon(produto.status)}
                           </button>
-                          <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                          <a href={`/admin/cardapio/bebidas/editar?id=${produto.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
-                          </button>
+                          </a>
                         </td>
                       </tr>
                     ))}

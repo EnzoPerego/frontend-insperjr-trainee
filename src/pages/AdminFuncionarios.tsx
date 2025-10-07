@@ -17,6 +17,10 @@ export default function AdminFuncionarios(): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
+  const getPerfilColor = (perfil: 'funcionario' | 'admin'): string => {
+    return perfil === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+  }
+
   useEffect(() => {
     const load = async () => {
       setLoading(true)
@@ -71,7 +75,7 @@ export default function AdminFuncionarios(): React.JSX.Element {
                       <h3 className="text-lg font-semibold text-gray-900 truncate">{f.nome}</h3>
                       <p className="text-sm text-gray-600 truncate">{f.email}</p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ml-2 flex-shrink-0 ${f.status === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                    <span className={`inline-flex items-center px-2 py-1.5 rounded-md text-sm font-medium ml-2 flex-shrink-0 ${getPerfilColor(f.status)}`}>
                       {f.status}
                     </span>
                   </div>
@@ -119,7 +123,7 @@ export default function AdminFuncionarios(): React.JSX.Element {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.nome}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{f.email}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${f.status === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
+                          <span className={`inline-flex items-center px-2 py-1.5 rounded-md text-sm font-medium ${getPerfilColor(f.status)}`}>
                             {f.status}
                           </span>
                         </td>

@@ -109,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <nav className="space-y-4 sm:space-y-6">
         {menuItems.map((section) => (
           <div key={section.title}>
-            <h3 className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <h3 className="text-xs sm:text-sm font-semibold text-black uppercase tracking-wider mb-3">
               {section.title}
             </h3>
             <ul className="space-y-1 sm:space-y-2">
