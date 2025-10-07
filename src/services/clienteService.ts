@@ -54,3 +54,13 @@ export async function removerEndereco(clienteId: string, enderecoId: string): Pr
   // Retornar os dados atualizados do cliente
   return buscarCliente(clienteId)
 }
+
+// aqui para o usuario fazer aedicao, utilizei a mesma logica para reomover o endereco
+export async function atualizarEndereco(clienteId: string, enderecoId: string, endereco: Partial<EnderecoData>): Promise<ClienteResponse> {
+  await apiFetch(`/clientes/${clienteId}/enderecos/${enderecoId}`, {
+    method: 'PUT',
+    body: JSON.stringify(endereco)
+  })
+  // Retornar os dados atualizados do cliente
+  return buscarCliente(clienteId)
+}
