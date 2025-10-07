@@ -23,6 +23,7 @@ import FormasEntrega from './pages/FormasEntrega'
 import Pagamento from './pages/Pagamento'
 import PedidoConfirmado from './pages/PedidoConfirmado'
 import MeusPedidos from './pages/MeusPedidos'
+import PerfilCliente from './pages/PerfilCliente'
 import Cardapio1 from './pages/Cardapio1'
 import Busca from './pages/Busca'
 import AdminFuncionarios from './pages/AdminFuncionarios'
@@ -250,6 +251,10 @@ function App(): React.JSX.Element {
 
     if (currentPath === '/meus-pedidos') {
       return <MeusPedidos />
+    }
+
+    if (currentPath === '/perfil') {
+      return <PerfilCliente />
     }
 
     // Página padrão (Home)

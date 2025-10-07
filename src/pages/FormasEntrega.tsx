@@ -242,7 +242,7 @@ const FormasEntrega: React.FC = () => {
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Rua *
                           </label>
                           <input
@@ -250,12 +250,12 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.rua}
                             onChange={(e) => setNewAddress({...newAddress, rua: e.target.value})}
                             placeholder="Nome da rua"
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Número *
                           </label>
                           <input
@@ -263,12 +263,12 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.numero}
                             onChange={(e) => setNewAddress({...newAddress, numero: e.target.value})}
                             placeholder="123"
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             CEP *
                           </label>
                           <input
@@ -276,12 +276,12 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.cep}
                             onChange={(e) => setNewAddress({...newAddress, cep: e.target.value})}
                             placeholder="00000-000"
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Bairro *
                           </label>
                           <input
@@ -289,12 +289,12 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.bairro}
                             onChange={(e) => setNewAddress({...newAddress, bairro: e.target.value})}
                             placeholder="Nome do bairro"
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Cidade *
                           </label>
                           <input
@@ -302,12 +302,12 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.cidade}
                             onChange={(e) => setNewAddress({...newAddress, cidade: e.target.value})}
                             placeholder="Nome da cidade"
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                         
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Complemento
                           </label>
                           <input
@@ -315,7 +315,7 @@ const FormasEntrega: React.FC = () => {
                             value={newAddress.complemento || ''}
                             onChange={(e) => setNewAddress({...newAddress, complemento: e.target.value})}
                             placeholder="Apartamento, bloco, etc."
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-kaiserhaus-dark-brown transition-all"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                           />
                         </div>
                       </div>

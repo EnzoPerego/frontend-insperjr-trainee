@@ -63,10 +63,10 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </a>
             {user && (
               <a 
-                href="/meus-pedidos" 
+                href="/perfil" 
                 className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
               >
-                Meus Pedidos
+                Meu Perfil
               </a>
             )}
           </nav>
@@ -183,11 +183,11 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               </a>
               {user && (
                 <a 
-                  href="/meus-pedidos" 
+                  href="/perfil" 
                   className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Meus Pedidos
+                  Meu Perfil
                 </a>
               )}
               <button 
