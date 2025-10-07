@@ -151,13 +151,13 @@ const Busca: React.FC = () => {
               </form>
 
               {/* Filtros */}
-              <div className="flex flex-wrap gap-4 justify-center items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-kaiserhaus-dark-brown font-montserrat font-semibold">Categoria:</span>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+                  <span className="text-kaiserhaus-dark-brown font-montserrat font-semibold text-sm sm:text-base">Categoria:</span>
                   <select
                     value={categoriaFiltro}
                     onChange={(e) => setCategoriaFiltro(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:border-kaiserhaus-dark-brown focus:outline-none transition-colors font-montserrat bg-white hover:border-kaiserhaus-dark-brown/50 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:border-kaiserhaus-dark-brown focus:outline-none transition-colors font-montserrat bg-white hover:border-kaiserhaus-dark-brown/50 cursor-pointer"
                   >
                     <option value="">Todas as categorias</option>
                     {categorias.map((categoria) => (
@@ -176,7 +176,7 @@ const Busca: React.FC = () => {
                     url.searchParams.delete('q')
                     window.history.pushState({}, '', url.toString())
                   }}
-                  className="px-6 py-2 bg-kaiserhaus-dark-brown text-white rounded-lg hover:bg-kaiserhaus-light-brown transition-colors font-montserrat font-semibold"
+                  className="w-full sm:w-auto px-6 py-2 bg-kaiserhaus-dark-brown text-white rounded-lg hover:bg-kaiserhaus-light-brown transition-colors font-montserrat font-semibold"
                 >
                   Limpar filtros
                 </button>

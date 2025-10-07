@@ -349,7 +349,7 @@ const Pagamento: React.FC = () => {
                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kaiserhaus-dark-brown focus:border-transparent"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-kaiserhaus-dark-brown mb-1">
                           Validade

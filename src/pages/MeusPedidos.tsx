@@ -167,33 +167,33 @@ const MeusPedidos: React.FC = () => {
           ) : (
             <div className="space-y-4">
               {pedidos.map((pedido) => (
-                <div key={pedido.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between">
+                <div key={pedido.id} className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Pedido #{pedido.id.slice(-8)}
                         </h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(pedido.status)}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium w-fit ${getStatusColor(pedido.status)}`}>
                           {pedido.status}
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-gray-600">
                         <div>
-                          <span className="font-medium">Data:</span>
-                          <p>{formatDate(pedido.created_at)}</p>
+                          <span className="font-medium text-gray-700">Data:</span>
+                          <p className="text-gray-900">{formatDate(pedido.created_at)}</p>
                         </div>
                         <div>
-                          <span className="font-medium">Total:</span>
+                          <span className="font-medium text-gray-700">Total:</span>
                           <p className="font-semibold text-kaiserhaus-dark-brown">
                             R$ {pedido.total.toFixed(2).replace('.', ',')}
                           </p>
                         </div>
                         {pedido.metodo_pagamento && (
-                          <div>
-                            <span className="font-medium">Pagamento:</span>
-                            <p className="capitalize">
+                          <div className="sm:col-span-2 lg:col-span-1">
+                            <span className="font-medium text-gray-700">Pagamento:</span>
+                            <p className="capitalize text-gray-900">
                               {pedido.metodo_pagamento === 'cash' ? 'Dinheiro' : 
                                pedido.metodo_pagamento === 'credit' ? 'Cartão de Crédito' :
                                pedido.metodo_pagamento === 'debit' ? 'Cartão de Débito' :
@@ -205,10 +205,10 @@ const MeusPedidos: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="ml-6">
+                    <div className="flex-shrink-0">
                       <button
                         onClick={() => window.location.href = `/pedido-confirmado?id=${pedido.id}`}
-                        className="bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
+                        className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
                       >
                         Ver Detalhes
                       </button>

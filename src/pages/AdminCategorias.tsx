@@ -63,7 +63,30 @@ export default function AdminCategorias(): React.JSX.Element {
           {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
         </div>
 
-        <div className="bg-white rounded-lg border shadow">
+        {/* Cards Mobile (sm) */}
+        <div className="grid grid-cols-1 gap-3 md:hidden">
+          {categorias.map((c) => (
+            <div key={c.id} className="bg-white rounded-lg border shadow-sm p-4">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-gray-900">{c.nome}</span>
+                <button 
+                  onClick={() => deleteCategoria(c.id)} 
+                  className="px-3 py-1.5 text-red-700 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition-colors"
+                >
+                  Remover
+                </button>
+              </div>
+            </div>
+          ))}
+          {categorias.length === 0 && (
+            <div className="bg-white rounded-lg border shadow-sm p-6 text-center">
+              <p className="text-gray-500">Nenhuma categoria cadastrada.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Tabela Desktop/Tablet (md+) */}
+        <div className="hidden md:block bg-white rounded-lg border shadow">
           <div className="p-4 border-b">
             <h2 className="text-lg font-semibold">Categorias existentes</h2>
           </div>
