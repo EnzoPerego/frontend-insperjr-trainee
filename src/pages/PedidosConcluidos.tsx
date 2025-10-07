@@ -1,84 +1,48 @@
 import React, { useState, useEffect } from 'react'
 import { formatCurrency } from '../lib/utils'
 import AdminLayout from '../components/AdminLayout'
+import PedidoDetalheModal from '../components/PedidoDetalheModal'
 import { Pedido, PedidoStatus } from '../types'
+import { apiFetch } from '../utils/api'
 
 export default function PedidosConcluidos(): React.JSX.Element {
   const [activeSection, setActiveSection] = useState<string>('pedidos')
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [detalheAberto, setDetalheAberto] = useState<boolean>(false)
+  const [pedidoIdSelecionado, setPedidoIdSelecionado] = useState<string | null>(null)
 
-  // Dados mockados para pedidos concluídos
-  const mockPedidosConcluidos: Pedido[] = [
-    {
-      id: "1",
-      numero: "#0001",
-      cliente: "henry@gmail.com",
-      status: "Concluído",
-      total: 89.90,
-      data: "05/09/2025, 13:47",
-      itens: [
-        { produto: "Pretzel Classico", quantidade: 2, preco: 29.00 },
-        { produto: "Eisnben", quantidade: 2, preco: 55.00 },
-        { produto: "Cerveja Long Neck", quantidade: 4, preco: 12.00 }
-      ]
-    },
-    {
-      id: "2",
-      numero: "#0002",
-      cliente: "maria@outlook.com",
-      status: "Concluído",
-      total: 43.00,
-      data: "05/09/2025, 13:45",
-      itens: [
-        { produto: "Salada", quantidade: 1, preco: 25.00 },
-        { produto: "Salsichas", quantidade: 1, preco: 18.00 }
-      ]
-    },
-    {
-      id: "3",
-      numero: "#0003",
-      cliente: "joao@hotmail.com",
-      status: "Cancelado",
-      total: 67.50,
-      data: "05/09/2025, 13:30",
-      itens: [
-        { produto: "Schnitzel de Frango", quantidade: 1, preco: 45.00 },
-        { produto: "Bratwurst", quantidade: 1, preco: 38.00 }
-      ]
-    },
-    {
-      id: "4",
-      numero: "#0004",
-      cliente: "ana@gmail.com",
-      status: "Cancelado",
-      total: 32.00,
-      data: "05/09/2025, 13:15",
-      itens: [
-        { produto: "Mini Croquete", quantidade: 2, preco: 15.00 },
-        { produto: "Pão de Alho", quantidade: 1, preco: 12.00 }
-      ]
-    }
-  ]
+  const mapFromApi = (p: any): Pedido => {
+    const numero = `#${String(p?.id || '').padStart(4, '0')}`
+    const cliente = p?.cliente?.email || p?.cliente?.nome || 'Cliente'
+    const status = (p?.status as PedidoStatus) || 'Pendente'
+    const total = Number(p?.total || 0)
+    const data = p?.created_at ? new Date(p.created_at).toLocaleString('pt-BR') : ''
+    const itens = Array.isArray(p?.itens) ? p.itens.map((i: any) => ({
+      produto: i?.produto?.titulo || i?.produto_nome || 'Item',
+      quantidade: Number(i?.quantidade || 0),
+      preco: Number(i?.preco_unitario || i?.preco || 0)
+    })) : []
+    return { id: String(p?.id || ''), numero, cliente, status, total, data, itens }
+  }
 
-  // Simular carregamento de dados da API
   useEffect(() => {
-    // TODO: Substituir por chamada real da API
-    // GET /pedidos?status=concluido
-    const loadPedidos = async (): Promise<void> => {
+    const load = async () => {
       setLoading(true)
+      setError(null)
       try {
-        // Simular delay da API
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setPedidos(mockPedidosConcluidos)
-      } catch (error) {
-        console.error('Erro ao carregar pedidos:', error)
+        const data = await apiFetch<any[]>(`/pedidos?status_filtro=Entregue`)
+        const mapped = (Array.isArray(data) ? data : []).map(mapFromApi)
+        setPedidos(mapped)
+      } catch (e: any) {
+        setError(e?.message || 'Erro ao carregar pedidos')
+        setPedidos([])
       } finally {
         setLoading(false)
       }
     }
-
-    loadPedidos()
+    load()
   }, [])
 
   // Função para obter cor do status (cinza para concluídos)
@@ -115,6 +79,9 @@ export default function PedidosConcluidos(): React.JSX.Element {
           </div>
         ) : (
           <>
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{error}</div>
+            )}
             {/* Cards Mobile (sm) */}
             <div className="grid grid-cols-1 gap-3 md:hidden">
               {pedidos.map((pedido) => (
@@ -138,7 +105,7 @@ export default function PedidosConcluidos(): React.JSX.Element {
                       </div>
                     </div>
                     <div className="shrink-0">
-                      <button className="px-3 py-1.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm font-medium">
+                      <button onClick={() => { setPedidoIdSelecionado(pedido.id); setDetalheAberto(true) }} className="px-3 py-1.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm font-medium">
                         Visualizar
                       </button>
                     </div>
@@ -174,7 +141,7 @@ export default function PedidosConcluidos(): React.JSX.Element {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="px-3 py-1.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm">
+                          <button onClick={() => { setPedidoIdSelecionado(pedido.id); setDetalheAberto(true) }} className="px-3 py-1.5 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm">
                             Visualizar
                           </button>
                         </td>
@@ -187,14 +154,7 @@ export default function PedidosConcluidos(): React.JSX.Element {
           </>
         )}
 
-        {/* TODO: Implementar funcionalidades de backend */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-yellow-800 mb-2">🚧 Integração com Backend Pendente</h3>
-          <div className="text-sm text-yellow-700 space-y-1">
-            <p>• <strong>useEffect:</strong> GET /pedidos?status=concluido</p>
-            <p>• <strong>Visualizar:</strong> GET /pedidos/{`{id}`}</p>
-          </div>
-        </div>
+        <PedidoDetalheModal open={detalheAberto} pedidoId={pedidoIdSelecionado} onClose={() => setDetalheAberto(false)} />
       </div>
     </AdminLayout>
   )

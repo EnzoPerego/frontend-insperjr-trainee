@@ -36,7 +36,7 @@ export interface Pedido {
   id: string;
   numero: string;
   cliente: string;
-  status: 'Pendente' | 'Entregue' | 'À caminho' | 'Ativo' | 'Cancelado' | 'Concluído';
+  status: PedidoStatus;
   total: number;
   data: string;
   itens: PedidoItem[];
@@ -83,4 +83,14 @@ export type FilterOption = string | null;
 export type ProdutoStatus = 'Ativo' | 'Inativo' | 'Indisponível';
 
 // Tipos para status de pedidos
-export type PedidoStatus = 'Pendente' | 'Entregue' | 'À caminho' | 'Ativo' | 'Cancelado' | 'Concluído';
+// Ampliado para cobrir tanto os rótulos antigos do frontend quanto os do backend
+export type PedidoStatus =
+  | 'Pendente'
+  | 'Em preparo'
+  | 'Pronto'
+  | 'Saiu para entrega'
+  | 'Entregue'
+  | 'Cancelado'
+  | 'À caminho'
+  | 'Ativo'
+  | 'Concluído';

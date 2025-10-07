@@ -11,6 +11,7 @@ import fundoHome from "../assets/fundo_home.png";
 import wpp from "../assets/wpp.png";
 import { apiFetch } from "../utils/api";
 import ProductModal from "../components/ProductModal";
+import { resolveImageUrl } from "../lib/utils";
 
 interface Produto {
   id: string;
@@ -174,8 +175,17 @@ export default function Home(): React.JSX.Element {
               
               return (
                 <article key={produto.id} className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">Imagem {produto.titulo}</span>
+                  <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center overflow-hidden">
+                    {produto.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={resolveImageUrl(produto.image_url)}
+                        alt={produto.titulo}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-gray-500">Imagem {produto.titulo}</span>
+                    )}
                   </div>
                   <div className="p-4">
                     <h3 className="text-lg font-bold text-gray-900 mb-2">{produto.titulo}</h3>

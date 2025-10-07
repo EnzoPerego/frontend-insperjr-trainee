@@ -17,6 +17,7 @@ import EsqueciMinhaSenha from './pages/EsqueciMinhaSenha'
 import RedefinirSenha from './pages/RedefinirSenha'
 import AdminAddProduto from './pages/AdminAddProduto'
 import AdminCategorias from './pages/AdminCategorias'
+import EditProductForm from './components/EditProductForm'
 
 import Carrinho from './pages/Carrinho'
 import FormasEntrega from './pages/FormasEntrega'
@@ -98,6 +99,14 @@ function App(): React.JSX.Element {
         </AdminGuard>
       )
     }
+    if (currentPath.startsWith('/admin/cardapio/entradas/editar')) {
+      const id = new URLSearchParams(window.location.search).get('id') || ''
+      return (
+        <AdminGuard>
+          <EditProductForm title="Entrada" categoriaNome="Entradas" onSuccessRedirect="/admin/cardapio/entradas" productId={id} />
+        </AdminGuard>
+      )
+    }
   
     if (currentPath === '/admin/cardapio/pratos') {
       return (
@@ -111,6 +120,14 @@ function App(): React.JSX.Element {
       return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Pratos" titulo="Pratos" redirect="/admin/cardapio/pratos" />
+        </AdminGuard>
+      )
+    }
+    if (currentPath.startsWith('/admin/cardapio/pratos/editar')) {
+      const id = new URLSearchParams(window.location.search).get('id') || ''
+      return (
+        <AdminGuard>
+          <EditProductForm title="Prato" categoriaNome="Pratos" onSuccessRedirect="/admin/cardapio/pratos" productId={id} />
         </AdminGuard>
       )
     }
@@ -130,6 +147,14 @@ function App(): React.JSX.Element {
         </AdminGuard>
       )
     }
+    if (currentPath.startsWith('/admin/cardapio/sobremesas/editar')) {
+      const id = new URLSearchParams(window.location.search).get('id') || ''
+      return (
+        <AdminGuard>
+          <EditProductForm title="Sobremesa" categoriaNome="Sobremesas" onSuccessRedirect="/admin/cardapio/sobremesas" productId={id} />
+        </AdminGuard>
+      )
+    }
   
     if (currentPath === '/admin/cardapio/bebidas') {
       return (
@@ -146,6 +171,14 @@ function App(): React.JSX.Element {
         </AdminGuard>
       )
     }
+    if (currentPath.startsWith('/admin/cardapio/bebidas/editar')) {
+      const id = new URLSearchParams(window.location.search).get('id') || ''
+      return (
+        <AdminGuard>
+          <EditProductForm title="Bebida" categoriaNome="Bebidas" onSuccessRedirect="/admin/cardapio/bebidas" productId={id} />
+        </AdminGuard>
+      )
+    }
   
     if (currentPath === '/admin/cardapio/vinhos') {
       return (
@@ -159,6 +192,14 @@ function App(): React.JSX.Element {
       return (
         <AdminGuard>
           <AdminAddProduto categoriaNome="Vinhos" titulo="Vinhos" redirect="/admin/cardapio/vinhos" />
+        </AdminGuard>
+      )
+    }
+    if (currentPath.startsWith('/admin/cardapio/vinhos/editar')) {
+      const id = new URLSearchParams(window.location.search).get('id') || ''
+      return (
+        <AdminGuard>
+          <EditProductForm title="Vinho" categoriaNome="Vinhos" onSuccessRedirect="/admin/cardapio/vinhos" productId={id} />
         </AdminGuard>
       )
     }
