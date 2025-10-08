@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import { apiFetch } from '../utils/api'
 import { formatPhoneBR, onlyDigits } from '../utils/phone'
+import BackButton from '../components/BackButton'
 
 const CadastroCliente: React.FC = () => {
   const [nome, setNome] = useState('')
@@ -34,12 +35,17 @@ const CadastroCliente: React.FC = () => {
   return (
     <Layout showHeader={false} showFooter={false}>
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md relative">
           <div className="text-center mb-6">
             <a href="/" className="text-3xl font-extrabold tracking-wide text-kaiserhaus-dark-brown hover:opacity-90 transition">
               KAISERHAUS
             </a>
             <p className="text-gray-600 mt-1">Criar conta de cliente</p>
+          </div>
+
+          {/* Botão de voltar para home */}
+          <div className="mb-4">
+            <BackButton />
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
