@@ -8,7 +8,7 @@ export default function AdminAddFuncionario(): React.JSX.Element {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [cpf, setCpf] = useState('')
-  const [status, setStatus] = useState<'funcionario' | 'admin'>('funcionario')
+  const [status, setStatus] = useState<'funcionario' | 'admin' | 'motoboy'>('funcionario')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -92,6 +92,7 @@ export default function AdminAddFuncionario(): React.JSX.Element {
               >
                 <option value="funcionario">Funcionário</option>
                 <option value="admin">Admin</option>
+                <option value="motoboy">Motoboy</option>
               </select>
             </div>
 

@@ -41,7 +41,7 @@ const PedidoConfirmado: React.FC<PedidoConfirmadoProps> = ({ pedidoId }) => {
           return
         }
 
-        const response = await apiFetch(`/pedidos/${id}`)
+        const response = await apiFetch(`/pedidos/cliente/${id}`)
         setPedido(response as Pedido)
       } catch (err) {
         console.error('Erro ao buscar pedido:', err)

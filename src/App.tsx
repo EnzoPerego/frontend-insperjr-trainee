@@ -29,12 +29,15 @@ import Cardapio1 from './pages/Cardapio1'
 import Busca from './pages/Busca'
 import AdminFuncionarios from './pages/AdminFuncionarios'
 import AdminAddFuncionario from './pages/AdminAddFuncionario'
+import MotoboyPedidosProntos from './pages/MotoboyPedidosProntos'
+import MotoboyEntrega from './pages/MotoboyEntrega'
 
 
 function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { user, isLoading } = useAuth()
   const currentPath: string = window.location.pathname
   const isAdminPath = currentPath.startsWith('/admin')
+  const isMotoboyPath = currentPath.startsWith('/motoboy')
   
   // Aguardar carregamento do usuário
   if (isLoading) {
@@ -42,24 +45,31 @@ function AdminGuard({ children }: { children: React.ReactNode }): React.JSX.Elem
   }
   
   // Bloqueios de autenticação baseados em role
-  if (isAdminPath) {
+  if (isAdminPath || isMotoboyPath) {
     // Se não está logado, redireciona para login
     if (!user) {
       window.location.href = '/login'
       return <></>
     }
     
-    // Se é cliente, não pode acessar área admin
+    // Se é cliente, não pode acessar área admin/motoboy
     if (user.user_type === 'cliente') {
       window.location.href = '/'
       return <></>
     }
     
-    // Se é funcionário, só pode acessar pedidos
+    // Se é funcionário comum, só pode acessar pedidos admin
     if (user.user_type === 'funcionario' && user.role === 'funcionario') {
       const isPedidosPath = currentPath.includes('/admin/pedidos/')
       if (!isPedidosPath) {
         window.location.href = '/admin/pedidos/pendentes'
+        return <></>
+      }
+    }
+    
+    if (user.user_type === 'funcionario' && user.role === 'motoboy') {
+      if (!isMotoboyPath) {
+        window.location.href = '/motoboy/pedidos-prontos'
         return <></>
       }
     }
@@ -243,6 +253,22 @@ function App(): React.JSX.Element {
       return (
         <AdminGuard>
           <PedidosConcluidos />
+        </AdminGuard>
+      )
+    }
+
+    if (currentPath === '/motoboy/pedidos-prontos') {
+      return (
+        <AdminGuard>
+          <MotoboyPedidosProntos />
+        </AdminGuard>
+      )
+    }
+
+    if (currentPath.startsWith('/motoboy/entrega/')) {
+      return (
+        <AdminGuard>
+          <MotoboyEntrega />
         </AdminGuard>
       )
     }

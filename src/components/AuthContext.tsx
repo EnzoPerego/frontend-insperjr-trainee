@@ -6,7 +6,7 @@ type User = {
   nome: string
   email: string
   user_type: 'cliente' | 'funcionario'
-  role: 'cliente' | 'funcionario' | 'admin'
+  role: 'cliente' | 'funcionario' | 'admin' | 'motoboy'
 }
 
 type AuthState = {
@@ -55,6 +55,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (res.user.user_type === 'funcionario') {
       if (res.user.role === 'admin') {
         window.location.href = '/admin/cardapio/entradas'
+      } else if (res.user.role === 'motoboy') {
+        window.location.href = '/motoboy/pedidos-prontos'
       } else {
         window.location.href = '/admin/pedidos/pendentes'
       }
