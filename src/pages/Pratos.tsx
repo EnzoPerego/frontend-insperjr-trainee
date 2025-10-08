@@ -5,7 +5,7 @@ import { Produto, ProdutoStatus } from '../types'
 import { apiFetch } from '../utils/api'
 
 export default function Pratos(): React.JSX.Element {
-  const [activeSection, setActiveSection] = useState<string>('cardápio')
+  const [activeSection, setActiveSection] = useState<string>('pratos')
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 

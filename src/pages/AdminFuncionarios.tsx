@@ -12,7 +12,7 @@ type Funcionario = {
 }
 
 export default function AdminFuncionarios(): React.JSX.Element {
-  const [activeSection, setActiveSection] = useState<string>('funcionarios')
+  const [activeSection, setActiveSection] = useState<string>('gerenciar')
   const [items, setItems] = useState<Funcionario[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

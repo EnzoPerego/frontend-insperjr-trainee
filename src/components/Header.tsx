@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           {/* Left Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
             <a 
-              href="#home" 
+              href="/" 
               className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
             >
               Home
@@ -168,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             
             <nav className="flex flex-col py-4">
               <a 
-                href="#home" 
+                href="/" 
                 className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

@@ -8,7 +8,7 @@ import PedidoDetalheModal from '../components/PedidoDetalheModal'
 
 export default function PedidosPendentes(): React.JSX.Element {
   const { user } = useAuth()
-  const [activeSection, setActiveSection] = useState<string>('pedidos')
+  const [activeSection, setActiveSection] = useState<string>('pendentes')
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
