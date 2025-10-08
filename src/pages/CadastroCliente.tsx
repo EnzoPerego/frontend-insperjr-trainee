@@ -74,13 +74,14 @@ const CadastroCliente: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Telefone (opcional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
                   <input
                     type="tel"
                     value={formatPhoneBR(telefone)}
                     onChange={e => setTelefone(onlyDigits(e.target.value))}
                     className="w-full rounded-lg border border-gray-300 focus:border-kaiserhaus-dark-brown focus:ring-2 focus:ring-kaiserhaus-dark-brown/20 px-3 py-2 outline-none transition"
                     placeholder="(11) 90000-0000"
+                    required
                   />
                 </div>
                 <div>

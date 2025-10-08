@@ -94,3 +94,48 @@ export type PedidoStatus =
   | 'À caminho'
   | 'Ativo'
   | 'Concluído';
+
+// motoboy
+export interface PedidoPronto {
+  id: string;
+  numero: string;
+  cliente: {
+    nome: string;
+    endereco: {
+      rua: string;
+      numero: string;
+      bairro: string;
+      cidade: string;
+      complemento?: string;
+    };
+  };
+  total: number;
+  data: string;
+  itens: Array<{
+    produto: string;
+    quantidade: number;
+  }>;
+}
+
+export interface PedidoAtribuido {
+  id: string;
+  numero: string;
+  cliente: {
+    nome: string;
+    telefone: string;
+    endereco: {
+      rua: string;
+      numero: string;
+      bairro: string;
+      cidade: string;
+      complemento?: string;
+    };
+  };
+  total: number;
+  data: string;
+  status: 'Saiu para entrega' | 'Entregue';
+  itens: Array<{
+    produto: string;
+    quantidade: number;
+  }>;
+}

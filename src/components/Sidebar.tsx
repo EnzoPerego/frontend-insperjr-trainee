@@ -19,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
+  const isMotoboy = user?.role === 'motoboy'
   
   // Menu items centralizados - reutilizável em todas as páginas admin
   const allMenuItems: MenuSection[] = [
@@ -54,18 +55,36 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   ]
 
+
+  const motoboyMenuItems: MenuSection[] = [
+    {
+      title: "Entregas",
+      items: [
+        { id: "pedidos-prontos", label: "Pedidos Prontos" }
+      ]
+    }
+  ]
+
   // Filtrar menu baseado no role do usuário
-  const menuItems = isAdmin 
-    ? allMenuItems 
-    : allMenuItems.filter(section => section.title === "Pedidos")
+  const menuItems = isMotoboy 
+    ? motoboyMenuItems
+    : isAdmin 
+      ? allMenuItems 
+      : allMenuItems.filter(section => section.title === "Pedidos")
 
   // Função para lidar com navegação
   const handleNavigation = (section: string, subSection: string): void => {
     // Fechar menu mobile
     onMobileMenuClose()
     
+
+    if (isMotoboy) {
+      if (subSection === 'pedidos-prontos') {
+        window.location.href = '/motoboy/pedidos-prontos'
+      }
+    }
     // Navegação para outras páginas
-    if (section === 'pedidos' && subSection === 'pendentes') {
+    else if (section === 'pedidos' && subSection === 'pendentes') {
       window.location.href = '/admin/pedidos/pendentes'
     } else if (section === 'pedidos' && subSection === 'concluidos') {
       window.location.href = '/admin/pedidos/concluidos'
@@ -88,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
     
     // Callback para atualizar estado local
-    onSectionChange(section)
+    onSectionChange(subSection)
   }
 
   return (
@@ -96,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Header da sidebar */}
       <div className="mb-6">
         <h2 className="text-lg sm:text-xl font-bold text-kaiserhaus-dark-brown">
-          KAISERHAUS {isAdmin ? 'Admin' : 'Funcionário'}
+          KAISERHAUS {isMotoboy ? 'Motoboy' : isAdmin ? 'Admin' : 'Funcionário'}
         </h2>
         {user && (
           <p className="text-sm text-gray-600 mt-1">
