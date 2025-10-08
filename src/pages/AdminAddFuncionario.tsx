@@ -3,7 +3,7 @@ import AdminLayout from '../components/AdminLayout'
 import { apiFetch } from '../utils/api'
 
 export default function AdminAddFuncionario(): React.JSX.Element {
-  const [activeSection, setActiveSection] = useState<string>('funcionarios')
+  const [activeSection, setActiveSection] = useState<string>('adicionar')
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
