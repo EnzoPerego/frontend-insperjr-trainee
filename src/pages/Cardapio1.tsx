@@ -1,73 +1,145 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../components/Layout'
 import { apiFetch } from '../utils/api'
 import ProductModal from '../components/ProductModal'
 import ProductCard from '../components/ProductCard'
-import Footer from '../components/Footer'
 import { Produto, Categoria } from '../types'
 
 const Cardapio1: React.FC = () => {
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [categorias, setCategorias] = useState<Categoria[]>([])
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(true)
+
+  // modal
   const [modalProduto, setModalProduto] = useState<Produto | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
+  // refs para âncoras
+  const topRef = useRef<HTMLDivElement>(null)
+  const entradasRef = useRef<HTMLElement>(null)
+  const pratosRef = useRef<HTMLElement>(null)
+  const sobremesasRef = useRef<HTMLElement>(null)
+  const cervejasRef = useRef<HTMLElement>(null)
+  const bebidasRef = useRef<HTMLElement>(null)
+
+  // categoria ativa (IntersectionObserver)
+  const [activeCategory, setActiveCategory] = useState<string>('')
+
 
   useEffect(() => {
-    const loadData = async () => {
+    const load = async () => {
       try {
-        // Carregar categorias
-        const categoriasData = await apiFetch<Categoria[]>('/categorias')
-        setCategorias(categoriasData)
-        
-        // Carregar produtos
-        const produtosData = await apiFetch<Produto[]>('/produtos')
-        setProdutos(produtosData.filter(p => p.categoria && p.categoria.id))
-        
-        // Selecionar primeira categoria por padrão
-        if (categoriasData.length > 0) {
-          setCategoriaSelecionada(categoriasData[0].id)
-        }
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error)
+        setLoading(true)
+        const cats = await apiFetch<Categoria[]>('/categorias')
+        const prods = await apiFetch<Produto[]>('/produtos')
+        setCategorias(cats || [])
+        setProdutos(prods || [])
+      } catch (err) {
+        console.error('Erro ao carregar Cardápio:', err)
       } finally {
         setLoading(false)
       }
     }
-
-    loadData()
+    load()
   }, [])
 
-  const handleOpenProductModal = (produto: Produto) => {
-    setModalProduto(produto)
+  /* helpers de categoria / agrupamento */
+  const getProdutoCategoriaId = (p: Produto) =>
+    (p as any).categoria_id ?? (p as any).categoriaId ?? p.categoria?.id ?? ''
+
+  const produtosPorCategoria: Record<string, Produto[]> = {}
+  produtos.forEach((p) => {
+    const catId = String(getProdutoCategoriaId(p) || 'uncategorized')
+    if (!produtosPorCategoria[catId]) produtosPorCategoria[catId] = []
+    produtosPorCategoria[catId].push(p)
+  })
+
+  const findCategoriaByName = (namePart: string) =>
+    categorias.find((c) => String(c.nome).toLowerCase().includes(namePart.toLowerCase()))
+
+  const getProdutosByCategory = (categoryName: string): Produto[] => {
+    const categoria = findCategoriaByName(categoryName)
+    if (!categoria) return []
+    return produtosPorCategoria[String(categoria.id)] || []
+  }
+
+  const produtosEntradas: Produto[] = getProdutosByCategory('entrada')
+  const produtosPratos: Produto[] = getProdutosByCategory('prato')
+  const produtosSobremesas: Produto[] = getProdutosByCategory('sobremesa')
+  const produtosCervejas: Produto[] = getProdutosByCategory('cerveja')
+  const produtosBebidas: Produto[] = getProdutosByCategory('bebida')
+
+  /* modal handlers */
+  const openProductModal = (p: Produto) => {
+    setModalProduto(p)
     setIsModalOpen(true)
   }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
+  const closeProductModal = () => {
     setModalProduto(null)
+    setIsModalOpen(false)
   }
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const produtosFiltrados = categoriaSelecionada 
-    ? produtos.filter(p => p.categoria?.id === categoriaSelecionada)
-    : produtos
-
-  // Agrupar produtos por categoria
-  const produtosPorCategoria = categorias.reduce((acc, categoria) => {
-    const produtosDaCategoria = produtos.filter(p => p.categoria?.id === categoria.id)
-    if (produtosDaCategoria.length > 0) {
-      acc[categoria.id] = {
-        categoria,
-        produtos: produtosDaCategoria
-      }
+  /* wrapper para ProductCard */
+  const ProductCardWrapper = ({ produto }: { produto: Produto }) => {
+    const handleAddToCart = (produto: any) => {
+      openProductModal(produto)
     }
-    return acc
-  }, {} as Record<string, { categoria: Categoria; produtos: Produto[] }>)
+    
+    return (
+      <ProductCard
+        produto={produto as any}
+        descricao={(produto as any).descricao_capa || produto.descricao_geral || (produto as any).descricao || "Descrição do produto"}
+        onAddToCart={handleAddToCart}
+      />
+    )
+  }
+
+  /* scroll helpers (âncoras) */
+  const scrollToRef = (r: React.RefObject<HTMLElement | HTMLDivElement | null>) => {
+    const el = r.current
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const scrollToEntradas = () => scrollToRef(entradasRef)
+  const scrollToPratos = () => scrollToRef(pratosRef)
+  const scrollToSobremesas = () => scrollToRef(sobremesasRef)
+  const scrollToCervejas = () => scrollToRef(cervejasRef)
+  const scrollToBebidas = () => scrollToRef(bebidasRef)
+  const scrollToTop = () => scrollToRef(topRef)
+
+  /* IntersectionObserver pra destacar categoria ativa */
+  useEffect(() => {
+    const sections: { id: string; ref: React.RefObject<HTMLElement | HTMLDivElement | null> }[] = [
+      { id: 'entradas', ref: entradasRef },
+      { id: 'pratos', ref: pratosRef },
+      { id: 'sobremesas', ref: sobremesasRef },
+      { id: 'cervejas', ref: cervejasRef },
+      { id: 'bebidas', ref: bebidasRef },
+    ]
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (visible) {
+          setActiveCategory(visible.target.id)
+        }
+      },
+      {
+        root: null,
+        threshold: [0.25, 0.4, 0.6],
+        rootMargin: '0px 0px -30% 0px',
+      }
+    )
+
+    sections.forEach((s) => {
+      if (s.ref.current) observer.observe(s.ref.current)
+    })
+
+    return () => observer.disconnect()
+  }, [produtos, categorias])
 
   if (loading) {
     return (
@@ -84,133 +156,219 @@ const Cardapio1: React.FC = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-white">
-        {/* Header do Cardápio */}
-        <div className="bg-white py-8 md:py-12">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-              <div>
-                <p className="text-kaiserhaus-dark-brown text-sm font-medium mb-2">Carta de Vinhos</p>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-2">Speisekarte</h1>
-                <p className="text-lg text-gray-900">Cardápio</p>
+      <div ref={topRef} className="min-h-screen bg-white py-10">
+        {/* Header fixo */}
+        <div className="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            {/* Top header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-1/3 text-left">
+                <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">Carta de vinhos</a>
               </div>
-              <div className="mt-4 md:mt-0">
-                <a href="#" className="text-kaiserhaus-dark-brown hover:text-kaiserhaus-light-brown transition-colors text-sm font-medium">
-                  Ver cardápio em pdf
+
+              <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
+                <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-3xl font-extrabold tracking-wide">
+                  Speisekarte
+                </div>
+
+                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="mt-2 text-gray-900 select-none">
+                  Cardápio
+                </div>
+              </div>
+
+              <div className="w-1/3 text-right">
+                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">
+                  Ver cardápio em PDF
                 </a>
               </div>
             </div>
 
-            {/* Filtros de Categoria */}
-            <div className="flex flex-wrap gap-4 mb-8">
-              <button 
-                onClick={() => setCategoriaSelecionada('')}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  categoriaSelecionada === '' 
-                    ? 'text-kaiserhaus-dark-brown border-b-2 border-kaiserhaus-dark-brown' 
-                    : 'text-gray-600 hover:text-kaiserhaus-dark-brown'
-                }`}
+            {/* categorias (Montserrat 18) */}
+            <div className="flex justify-center gap-8">
+              <button
+                onClick={scrollToEntradas}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
+                className={`${activeCategory === 'entradas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
-                Todos
+                Entradas
               </button>
-              {categorias.map((categoria) => (
-                <button 
-                  key={categoria.id}
-                  onClick={() => setCategoriaSelecionada(categoria.id)}
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
-                    categoriaSelecionada === categoria.id 
-                      ? 'text-kaiserhaus-dark-brown border-b-2 border-kaiserhaus-dark-brown' 
-                      : 'text-gray-600 hover:text-kaiserhaus-dark-brown'
-                  }`}
-                >
-                  {categoria.nome}
-                </button>
-              ))}
+
+              <button
+                onClick={scrollToPratos}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
+                className={`${activeCategory === 'pratos' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+              >
+                Pratos
+              </button>
+
+              <button
+                onClick={scrollToSobremesas}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
+                className={`${activeCategory === 'sobremesas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+              >
+                Sobremesas
+              </button>
+
+              <button
+                onClick={scrollToCervejas}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
+                className={`${activeCategory === 'cervejas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+              >
+                Cervejas
+              </button>
+
+              <button
+                onClick={scrollToBebidas}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
+                className={`${activeCategory === 'bebidas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+              >
+                Bebidas
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Seção de Produtos */}
-        <div className="bg-white">
-          <div className="container mx-auto px-4 pb-12">
-            {categoriaSelecionada ? (
-              // Mostrar produtos da categoria selecionada
-              (() => {
-                const categoria = categorias.find(c => c.id === categoriaSelecionada)
-                const produtosCategoria = produtos.filter(p => p.categoria?.id === categoriaSelecionada)
-                
-                if (!categoria || produtosCategoria.length === 0) {
-                  return (
-                    <div className="text-center py-12">
-                      <p className="text-gray-500">Nenhum produto encontrado nesta categoria.</p>
-                    </div>
-                  )
-                }
+        {/* Conteúdo com padding para compensar o header fixo */}
+        <div className="max-w-6xl mx-auto px-6 pt-32">
 
-                return (
-                  <div key={categoria.id}>
-                    <div className="flex items-center mb-8">
+          {/* Entradas */}
+          <section ref={entradasRef} id="entradas" className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
                       <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">I {categoria.nome}</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Entradas</h2>
+              </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {produtosCategoria.map((produto) => (
-                        <ProductCard
-                          key={produto.id}
-                          produto={produto}
-                          onAddToCart={handleOpenProductModal}
+            <hr className="border-t border-gray-200 mb-6" />
+
+            {produtosEntradas.length === 0 ? (
+              <p className="text-gray-600">Nenhuma entrada cadastrada.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {produtosEntradas.map((p) => (
+                  <ProductCardWrapper
+                    key={String(p.id)}
+                    produto={p}
                         />
                       ))}
                     </div>
+            )}
+          </section>
+
+          {/* Pratos */}
+          <section ref={pratosRef} id="pratos" className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Pratos</h2>
+                    </div>
                   </div>
-                )
-              })()
+
+            <hr className="border-t border-gray-200 mb-6" />
+
+            {produtosPratos.length === 0 ? (
+              <p className="text-gray-600">Nenhum prato cadastrado.</p>
             ) : (
-              // Mostrar todas as categorias
-              Object.values(produtosPorCategoria).map(({ categoria, produtos: produtosCategoria }) => (
-                <div key={categoria.id} className="mb-16">
-                  <div className="flex items-center mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {produtosPratos.map((p) => (
+                  <ProductCardWrapper
+                    key={String(p.id)}
+                    produto={p}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Sobremesas */}
+          <section ref={sobremesasRef} id="sobremesas" className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
                     <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">I {categoria.nome}</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Sobremesas</h2>
+              </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {produtosCategoria.map((produto) => (
-                      <ProductCard
-                        key={produto.id}
-                        produto={produto}
-                        onAddToCart={handleOpenProductModal}
+            <hr className="border-t border-gray-200 mb-6" />
+
+            {produtosSobremesas.length === 0 ? (
+              <p className="text-gray-600">Nenhuma sobremesa cadastrada.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {produtosSobremesas.map((p) => (
+                  <ProductCardWrapper
+                    key={String(p.id)}
+                    produto={p}
                       />
                     ))}
                   </div>
-                </div>
-              ))
             )}
+          </section>
 
-            {/* Botão Voltar ao Topo */}
-            <div className="text-center mt-12">
-              <button 
-                onClick={handleScrollToTop}
-                className="text-gray-600 hover:text-gray-800 transition-colors text-sm font-medium"
-              >
-                Voltar ao topo ↑
-              </button>
+          {/* Cervejas */}
+          <section ref={cervejasRef} id="cervejas" className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Cervejas</h2>
+              </div>
             </div>
+
+            <hr className="border-t border-gray-200 mb-6" />
+
+            {produtosCervejas.length === 0 ? (
+              <p className="text-gray-600">Nenhuma cerveja cadastrada.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {produtosCervejas.map((p) => (
+                  <ProductCardWrapper
+                    key={String(p.id)}
+                    produto={p}
+                  />
+                ))}
+                </div>
+            )}
+          </section>
+
+          {/* Bebidas */}
+          <section ref={bebidasRef} id="bebidas" className="mb-16">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Bebidas</h2>
+              </div>
+              <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 20 }} className="text-kaiserhaus-dark-brown hover:underline">Carta de vinhos</a>
+            </div>
+
+            <hr className="border-t border-gray-200 mb-6" />
+
+            {produtosBebidas.length === 0 ? (
+              <p className="text-gray-600">Nenhuma bebida cadastrada.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {produtosBebidas.map((p) => (
+                  <ProductCardWrapper
+                    key={String(p.id)}
+                    produto={p}
+                  />
+                ))}
           </div>
+            )}
+          </section>
+
+          <div style={{ height: 100 }} />
         </div>
 
-        {/* Footer */}
-        <Footer />
+        {/* botão "Voltar ao topo" FIXO */}
+        <div style={{ zIndex: 60 }} className="fixed left-1/2 transform -translate-x-1/2 bottom-6">
+          <button onClick={scrollToTop} className="px-6 py-3 rounded-md bg-gray-100 shadow" aria-label="Voltar ao topo">
+            Voltar ao topo
+          </button>
+        </div>
 
-        {/* Modal do Produto */}
-        {modalProduto && (
-          <ProductModal
-            produto={modalProduto}
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-          />
-        )}
+        {/* Modal do produto */}
+        {modalProduto && <ProductModal produto={modalProduto} isOpen={isModalOpen} onClose={closeProductModal} />}
       </div>
     </Layout>
   )
