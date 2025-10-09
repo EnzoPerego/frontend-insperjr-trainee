@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({
     <div className="min-h-screen flex flex-col bg-gray-50">
       {showHeader && <Header />}
       
-      <main className={cn('flex-1', className)}>
+      <main className={cn('flex-1 pt-16', className)}>
         {children}
       </main>
       

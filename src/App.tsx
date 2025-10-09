@@ -26,6 +26,7 @@ import PedidoConfirmado from './pages/PedidoConfirmado'
 import MeusPedidos from './pages/MeusPedidos'
 import PerfilCliente from './pages/PerfilCliente'
 import Cardapio1 from './pages/Cardapio1'
+import CartaVinhos from './pages/CartaVinhos'
 import Busca from './pages/Busca'
 import AdminFuncionarios from './pages/AdminFuncionarios'
 import AdminAddFuncionario from './pages/AdminAddFuncionario'
@@ -292,6 +293,11 @@ function App(): React.JSX.Element {
     // Rota do cardápio
     if (currentPath === '/cardapio') {
       return <Cardapio1 />
+    }
+
+    // Rota da carta de vinhos
+    if (currentPath === '/carta-vinhos') {
+      return <CartaVinhos />
     }
 
     // Rota de busca

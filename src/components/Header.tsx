@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   }
 
     return (
-      <header className={cn('bg-kaiserhaus-dark-brown text-white', className)}>
+      <header className={cn('fixed top-0 left-0 right-0 bg-kaiserhaus-dark-brown text-white z-50', className)}>
         <div className="container mx-auto px-4">
           {/* Primeira linha,   sempre visível */}
           <div className="flex items-center justify-between h-16 relative">
