@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useCart } from '../contexts/CartContext'
+import { resolveImageUrl } from '../lib/utils'
 
 interface Acompanhamento {
   nome: string
@@ -87,7 +88,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
           <div className="w-full md:w-1/2 p-4 md:p-6 flex items-center">
             {produto.image_url ? (
               <img
-                src={produto.image_url}
+                src={resolveImageUrl(produto.image_url)}
                 alt={produto.titulo}
                 className="w-full h-full max-h-[300px] md:max-h-[500px] object-cover rounded-lg"
               />

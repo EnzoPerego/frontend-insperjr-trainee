@@ -28,8 +28,11 @@ interface Produto {
 
 export default function Home(): React.JSX.Element {
   const refParalaxe = useRef<HTMLDivElement | null>(null);
+  const promocoesRef = useRef<HTMLDivElement | null>(null);
   const [deslocamentoParalaxe, setDeslocamentoParalaxe] = useState<number>(-10);
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [estrelas, setEstrelas] = useState<Produto[]>([]);
+  const [promocoes, setPromocoes] = useState<Produto[]>([]);
   const [modalProduto, setModalProduto] = useState<Produto | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,27 +40,29 @@ export default function Home(): React.JSX.Element {
   useEffect(() => {
     const buscarProdutos = async () => {
       try {
-        const todosProdutos = await apiFetch<Produto[]>('/produtos');
-        
-        if (todosProdutos && todosProdutos.length > 0) {
-          // Pegar os primeiros 3 produtos para exibir na home
-          setProdutos(todosProdutos.slice(0, 3));
-        } else {
-          // produtos fictícios se não houver produtos no banco
-          setProdutos([
-            { id: '507f1f77bcf86cd799439011', titulo: 'Eisbein', preco: 45.90 },
-            { id: '507f1f77bcf86cd799439012', titulo: 'Pretzel Clássico', preco: 18.50 },
-            { id: '507f1f77bcf86cd799439013', titulo: 'Feijoada Completa', preco: 38.90 }
-          ]);
-        }
+        const [todosProdutos, estrelasResp, promocoesResp] = await Promise.all([
+          apiFetch<Produto[]>('/produtos'),
+          apiFetch<Produto[]>('/produtos/estrelas-kaiserhaus'),
+          apiFetch<Produto[]>('/produtos/promocoes')
+        ]);
+
+        const listaProdutos = todosProdutos || [];
+        const listaEstrelas = estrelasResp || [];
+        const listaPromocoes = promocoesResp || [];
+
+        // Estrelas Kaiserhaus: limitar a 3
+        setEstrelas(listaEstrelas.slice(0, 3));
+
+        // Produtos em destaque (fallback para os 3 primeiros produtos gerais)
+        setProdutos(listaProdutos.slice(0, 3));
+
+        // Promoções da semana (usar rota dedicada do backend)
+        setPromocoes(listaPromocoes);
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);
-        //  produtos fictícios em caso de erro
-        setProdutos([
-          { id: '507f1f77bcf86cd799439011', titulo: 'Eisbein', preco: 45.90 },
-          { id: '507f1f77bcf86cd799439012', titulo: 'Pretzel Clássico', preco: 18.50 },
-          { id: '507f1f77bcf86cd799439013', titulo: 'Feijoada Completa', preco: 38.90 }
-        ]);
+        setProdutos([]);
+        setEstrelas([]);
+        setPromocoes([]);
       }
     };
 
@@ -166,22 +171,13 @@ export default function Home(): React.JSX.Element {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {produtos.slice(0, 3).map((produto, index) => {
-              const descricoes = [
-                "Joelho de porco defumado, crocante por fora e macio por dentro",
-                "Tradicional alemão com mostarda Dijon",
-                "O tradicional prato brasileiro com carnes suínas e feijão"
-              ];
-              
-              return (
-                <ProductCard
-                  key={produto.id}
-                  produto={produto}
-                  descricao={descricoes[index]}
-                  onAddToCart={handleOpenProductModal}
-                />
-              );
-            })}
+            {(estrelas.length > 0 ? estrelas : produtos).slice(0, 3).map((produto) => (
+              <ProductCard
+                key={produto.id}
+                produto={produto}
+                onAddToCart={handleOpenProductModal}
+              />
+            ))}
           </div>
 
           <div className="text-center mt-10">
@@ -228,72 +224,58 @@ export default function Home(): React.JSX.Element {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Bolinho */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Bolinho</span>
-              </div>
-              <div className="p-4 relative">
-                <div className="flex items-baseline justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Bolinho</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-montserrat font-light text-kaiserhaus-dark-brown">18</span>
-                    <span className="text-lg font-montserrat font-light text-gray-500 line-through">25</span>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 mb-8">
-                  Frango, carne, mandioca, linguiça blumenau, chucrute, cerveja e queijo
-                </p>
-                <button className="absolute bottom-4 left-4 text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
+          <div className="relative">
+            <div className="absolute -left-3 top-1/2 -translate-y-1/2 z-10">
+              <button
+                aria-label="Anterior"
+                className="p-2 rounded-full bg-white border border-gray-200 shadow hover:bg-gray-50"
+                onClick={() => {
+                  const el = promocoesRef.current;
+                  if (!el) return;
+                  el.scrollBy({ left: -Math.max(320, el.clientWidth * 0.8), behavior: 'smooth' });
+                }}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            </div>
 
-            {/* Saint Peter à Belle Meunière */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Saint Peter</span>
-              </div>
-              <div className="p-4 relative">
-                <div className="flex items-baseline justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Saint Peter à Belle Meunière</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-montserrat font-light text-kaiserhaus-dark-brown">54</span>
-                    <span className="text-lg font-montserrat font-light text-gray-500 line-through">64</span>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 mb-8">
-                  Filé de tilápia com molho de manteiga e alcaparras
-                </p>
-                <button className="absolute bottom-4 left-4 text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
+            <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-10">
+              <button
+                aria-label="Próximo"
+                className="p-2 rounded-full bg-white border border-gray-200 shadow hover:bg-gray-50"
+                onClick={() => {
+                  const el = promocoesRef.current;
+                  if (!el) return;
+                  el.scrollBy({ left: Math.max(320, el.clientWidth * 0.8), behavior: 'smooth' });
+                }}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
 
-            {/* Apfelstrudel */}
-            <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Imagem Apfelstrudel</span>
-              </div>
-              <div className="p-4 relative">
-                <div className="flex items-baseline justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Apfelstrudel</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-montserrat font-light text-kaiserhaus-dark-brown">30</span>
-                    <span className="text-lg font-montserrat font-light text-gray-500 line-through">40</span>
+            <div
+              ref={promocoesRef}
+              className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
+            >
+              {promocoes.length > 0 ? (
+                promocoes.map((produto) => (
+                  <div key={produto.id} className="min-w-[280px] sm:min-w-[320px] lg:min-w-[360px] snap-start">
+                    <ProductCard
+                      produto={produto}
+                      onAddToCart={handleOpenProductModal}
+                    />
                   </div>
+                ))
+              ) : (
+                <div className="w-full text-center text-gray-600">
+                  Nenhuma promoção ativa no momento.
                 </div>
-                <p className="text-sm text-gray-600 mb-8">
-                  Folhado crocante recheado com maçã, canela e especiarias
-                </p>
-                <button className="absolute bottom-4 left-4 text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                  Adicionar ao carrinho →
-                </button>
-              </div>
-            </article>
+              )}
+            </div>
           </div>
 
           {/* Navegação */}
