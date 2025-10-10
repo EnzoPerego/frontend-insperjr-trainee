@@ -10,6 +10,7 @@ interface Acompanhamento {
 interface Produto {
   id: string
   titulo: string
+  descricao_capa?: string
   descricao_geral?: string
   image_url?: string
   preco: number
@@ -122,9 +123,11 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
             </div>
 
             {/* ddescrição */}
-            {produto.descricao_geral && (
+            {(produto.descricao_capa || produto.descricao_geral) && (
               <div className="mb-6">
-                <p className="text-gray-700 leading-relaxed">{produto.descricao_geral}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {produto.descricao_capa || produto.descricao_geral}
+                </p>
               </div>
             )}
 

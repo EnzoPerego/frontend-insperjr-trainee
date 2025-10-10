@@ -6,6 +6,7 @@ interface Produto {
   titulo: string
   preco: number
   preco_promocional?: number
+  descricao_capa?: string
   descricao_geral?: string
   descricao?: string
   image_url?: string
@@ -27,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onAddToCart 
 }) => {
   const preco = produto.preco_promocional || produto.preco
-  const descricaoFinal = descricao || produto.descricao_geral || produto.descricao || "Descrição do produto"
+  const descricaoFinal = descricao || produto.descricao_capa || produto.descricao_geral || produto.descricao || "Descrição do produto"
 
   return (
     <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">

@@ -18,6 +18,7 @@ interface Produto {
   titulo: string;
   preco: number;
   preco_promocional?: number;
+  descricao_capa?: string;
   descricao_geral?: string;
   image_url?: string;
   acompanhamentos?: Array<{
