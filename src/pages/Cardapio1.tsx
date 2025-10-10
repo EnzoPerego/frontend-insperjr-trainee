@@ -24,6 +24,9 @@ const Cardapio1: React.FC = () => {
 
   // categoria ativa (IntersectionObserver)
   const [activeCategory, setActiveCategory] = useState<string>('')
+  
+  // busca
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
 
   useEffect(() => {
@@ -68,6 +71,23 @@ const Cardapio1: React.FC = () => {
   const produtosSobremesas: Produto[] = getProdutosByCategory('sobremesa')
   const produtosCervejas: Produto[] = getProdutosByCategory('cerveja')
   const produtosBebidas: Produto[] = getProdutosByCategory('bebida')
+
+  // Função de busca
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchTerm.trim()) {
+      window.location.href = `/busca?q=${encodeURIComponent(searchTerm.trim())}`
+    }
+  }
+
+  // Filtrar produtos por busca (para mostrar resultados na própria página)
+  const filteredProdutos = searchTerm.trim() 
+    ? produtos.filter(produto => 
+        produto.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        produto.descricao_geral?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        produto.descricao?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : produtos
 
   /* modal handlers */
   const openProductModal = (p: Produto) => {
@@ -157,13 +177,13 @@ const Cardapio1: React.FC = () => {
   return (
     <Layout>
       <div ref={topRef} className="min-h-screen bg-white py-10">
-        {/* Header fixo */}
-        <div className="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
+        {/* Header normal (rola com a página) */}
+        <div className="bg-white">
           <div className="max-w-6xl mx-auto px-6 py-4">
             {/* Top header */}
             <div className="flex items-center justify-between mb-4">
               <div className="w-1/3 text-left">
-                <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">Carta de vinhos</a>
+                <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">Carta de vinhos</a>
               </div>
 
               <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
@@ -177,12 +197,40 @@ const Cardapio1: React.FC = () => {
               </div>
 
               <div className="w-1/3 text-right">
-                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">
+                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">
                   Ver cardápio em PDF
                 </a>
               </div>
             </div>
 
+            {/* Barra de busca */}
+            <div className="flex justify-center mb-4">
+              <form onSubmit={handleSearch} className="w-full max-w-md">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Buscar produtos por nome ou descrição..."
+                    className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:border-kaiserhaus-dark-brown focus:outline-none transition-colors text-base font-montserrat bg-white"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-kaiserhaus-dark-brown hover:text-kaiserhaus-light-brown transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Header sticky - apenas categorias */}
+        <div className="sticky top-16 bg-white z-40 shadow-sm">
+          <div className="max-w-6xl mx-auto px-6 py-3">
             {/* categorias (Montserrat 18) */}
             <div className="flex justify-center gap-8">
               <button
@@ -229,7 +277,7 @@ const Cardapio1: React.FC = () => {
         </div>
 
         {/* Conteúdo com padding para compensar o header fixo */}
-        <div className="max-w-6xl mx-auto px-6 pt-32">
+        <div className="max-w-6xl mx-auto px-6 pt-8">
 
           {/* Entradas */}
           <section ref={entradasRef} id="entradas" className="mb-12">

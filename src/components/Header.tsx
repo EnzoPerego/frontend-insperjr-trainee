@@ -11,20 +11,12 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const [isContactOpen, setIsContactOpen] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string>('')
   const { user, logout } = useAuth()
   const { getTotalItems, isInitialized } = useCart()
   const cartItemsCount = getTotalItems()
 
   const toggleMobileMenu = (): void => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchTerm.trim()) {
-      window.location.href = `/busca?q=${encodeURIComponent(searchTerm.trim())}`
-    }
   }
 
     return (
@@ -78,28 +70,6 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </a>
           </div>
 
-          {/* barra de busca na direita */}
-          <div className="hidden lg:flex ml-auto mr-8">
-            <form onSubmit={handleSearch} className="w-full">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar produtos..."
-                  className="w-64 px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
-                />
-                <button
-                  type="submit"
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
 
           {/* Right Navigation - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-3 lg:space-x-4">
@@ -142,30 +112,6 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-kaiserhaus-dark-brown border-t border-kaiserhaus-light-brown shadow-lg z-50">
-            {/* pesquisa para mobile */}
-            <div className="p-4 border-b border-kaiserhaus-light-brown">
-              <form onSubmit={handleSearch}>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Buscar produtos..."
-                    className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  />
-                  <button
-                    type="submit"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            </div>
-            
             <nav className="flex flex-col py-4">
               <a 
                 href="/" 
