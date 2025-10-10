@@ -226,74 +226,73 @@ export default function Home(): React.JSX.Element {
           </div>
 
           <div className="relative">
-            <div className="absolute -left-3 top-1/2 -translate-y-1/2 z-10">
-              <button
-                aria-label="Anterior"
-                className="p-2 rounded-full bg-white border border-gray-200 shadow hover:bg-gray-50"
-                onClick={() => {
-                  const el = promocoesRef.current;
-                  if (!el) return;
-                  el.scrollBy({ left: -Math.max(320, el.clientWidth * 0.8), behavior: 'smooth' });
-                }}
+            {promocoes.length > 3 ? (
+              // Layout horizontal com scroll quando há mais de 3 produtos
+              <div
+                ref={promocoesRef}
+                className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-10">
-              <button
-                aria-label="Próximo"
-                className="p-2 rounded-full bg-white border border-gray-200 shadow hover:bg-gray-50"
-                onClick={() => {
-                  const el = promocoesRef.current;
-                  if (!el) return;
-                  el.scrollBy({ left: Math.max(320, el.clientWidth * 0.8), behavior: 'smooth' });
-                }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-
-            <div
-              ref={promocoesRef}
-              className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
-            >
-              {promocoes.length > 0 ? (
-                promocoes.map((produto) => (
-                  <div key={produto.id} className="min-w-[280px] sm:min-w-[320px] lg:min-w-[360px] snap-start">
+                {promocoes.map((produto) => (
+                  <div key={produto.id} className="flex-shrink-0 w-80">
                     <ProductCard
                       produto={produto}
                       onAddToCart={handleOpenProductModal}
                     />
                   </div>
-                ))
-              ) : (
-                <div className="w-full text-center text-gray-600">
-                  Nenhuma promoção ativa no momento.
-                </div>
-              )}
-            </div>
+                ))}
+              </div>
+            ) : (
+              // Layout em grid quando há 3 ou menos produtos
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {promocoes.length > 0 ? (
+                  promocoes.map((produto) => (
+                    <ProductCard
+                      key={produto.id}
+                      produto={produto}
+                      onAddToCart={handleOpenProductModal}
+                    />
+                  ))
+                ) : (
+                  <div className="w-full text-center text-gray-600 col-span-full">
+                    Nenhuma promoção ativa no momento.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Navegação */}
-          <div className="flex justify-center mt-8">
-            <div className="flex items-center gap-4">
-              <button className="p-2 text-gray-400 hover:text-gray-600 transition">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button className="p-2 text-gray-400 hover:text-gray-600 transition">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+          {/* Navegação - só aparece quando há mais de 3 produtos */}
+          {promocoes.length > 3 && (
+            <div className="flex justify-center mt-8">
+              <div className="flex items-center gap-4">
+                <button 
+                  className="p-2 text-gray-400 hover:text-gray-600 transition"
+                  onClick={() => {
+                    const el = promocoesRef.current;
+                    if (!el) return;
+                    el.scrollBy({ left: -320, behavior: 'smooth' });
+                  }}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button 
+                  className="p-2 text-gray-400 hover:text-gray-600 transition"
+                  onClick={() => {
+                    const el = promocoesRef.current;
+                    if (!el) return;
+                    el.scrollBy({ left: 320, behavior: 'smooth' });
+                  }}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
