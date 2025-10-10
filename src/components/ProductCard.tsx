@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const descricaoFinal = descricao || produto.descricao_capa || produto.descricao_geral || produto.descricao || "Descrição do produto"
 
   return (
-    <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+    <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col" style={{ minHeight: '450px' }}>
       <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center overflow-hidden">
         {produto.image_url ? (
           <img
@@ -43,7 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-gray-500">Imagem {produto.titulo}</span>
         )}
       </div>
-      <div className="p-4 relative">
+      <div className="p-4 flex flex-col flex-grow">
         <div className="flex items-baseline justify-between mb-2">
           <h3 className="text-lg font-bold text-gray-900">{produto.titulo}</h3>
           <div className="flex items-baseline gap-2">
@@ -57,12 +57,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
         </div>
-        <p className="text-sm text-gray-600 mb-8">
+        <p className="text-sm text-gray-600 flex-grow mb-4 overflow-hidden" style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical'
+        }}>
           {descricaoFinal}
         </p>
         <button 
           onClick={() => onAddToCart(produto)}
-          className="absolute bottom-4 left-4 text-sm text-kaiserhaus-dark-brown font-medium hover:text-kaiserhaus-light-brown transition"
+          className="text-sm text-kaiserhaus-dark-brown font-medium hover:text-kaiserhaus-light-brown transition"
         >
           Adicionar ao carrinho →
         </button>
