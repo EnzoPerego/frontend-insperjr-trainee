@@ -11,6 +11,7 @@ import PedidosConcluidos from './pages/PedidosConcluidos'
 import './styles/globals.css'
 import { AuthProvider, useAuth } from './components/AuthContext'
 import { CartProvider } from './contexts/CartContext'
+import { AvisoAddProvider } from './contexts/AvisoAddContext'
 import Login from './pages/Login'
 import CadastroCliente from './pages/CadastroCliente'
 import EsqueciMinhaSenha from './pages/EsqueciMinhaSenha'
@@ -83,7 +84,9 @@ function AppProviders({ children }: { children: React.ReactNode }): React.JSX.El
   return (
     <AuthProvider>
       <CartProvider>
-        {children}
+        <AvisoAddProvider>
+          {children}
+        </AvisoAddProvider>
       </CartProvider>
     </AuthProvider>
   )
