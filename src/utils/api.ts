@@ -33,4 +33,28 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
   }
 }
 
+export async function apiUpload<T>(path: string, formData: FormData): Promise<T> {
+  const url = `${config.API_BASE_URL}${path}`
+  const token = getAuthToken()
+  const headers: Record<string, string> = {}
+  if (token) headers['Authorization'] = `Bearer ${token}`
+
+  const res = await fetch(url, { 
+    method: 'POST', 
+    body: formData, 
+    headers 
+  })
+  if (!res.ok) {
+    let detail: any = undefined
+    try { detail = await res.json() } catch {}
+    throw new Error(detail?.detail || `Erro ${res.status}`)
+  }
+  try {
+    return await res.json() as T
+  } catch {
+    // "@"ts-expect-error allow empty
+    return undefined as T
+  }
+}
+
 

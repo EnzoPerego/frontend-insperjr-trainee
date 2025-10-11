@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import AdminLayout from './AdminLayout'
-import { apiFetch } from '../utils/api'
-import { config } from '../config'
+import ProductCardWithImageControls from './ProductCardWithImageControls'
+import { apiFetch, apiUpload } from '../utils/api'
 import { resolveImageUrl } from '../lib/utils'
-import ProductImagePreview from './ProductImagePreview'
 
 type Props = {
   title: string
@@ -24,6 +23,7 @@ export default function EditProductForm({ title, categoriaNome, onSuccessRedirec
   const [error, setError] = useState<string | null>(null)
   const [categoriaId, setCategoriaId] = useState<string | null>(null)
   const [currentImageUrl, setCurrentImageUrl] = useState<string>('')
+  const [imageTransform, setImageTransform] = useState<{ zoom: number; offsetX: number; offsetY: number }>({ zoom: 1, offsetX: 0, offsetY: 0 })
 
   // Controles de imagem moved to ProductImagePreview
 
@@ -90,9 +90,10 @@ export default function EditProductForm({ title, categoriaNome, onSuccessRedirec
       if (imageFile) {
         const form = new FormData()
         form.append('file', imageFile)
-        const res = await fetch(`${config.API_BASE_URL}/files/upload`, { method: 'POST', body: form })
-        if (!res.ok) throw new Error('Falha no upload da imagem')
-        const data = await res.json()
+        form.append('zoom', imageTransform.zoom.toString())
+        form.append('offset_x', imageTransform.offsetX.toString())
+        form.append('offset_y', imageTransform.offsetY.toString())
+        const data = await apiUpload<{url: string}>('/files/upload-with-transform', form)
         finalImageUrl = data.url
       }
       const body = {
@@ -120,18 +121,51 @@ export default function EditProductForm({ title, categoriaNome, onSuccessRedirec
     }
   }
 
+  const onDelete = async () => {
+    if (!productId) return
+    const confirmed = window.confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')
+    if (!confirmed) return
+    setLoading(true)
+    setError(null)
+    try {
+      await apiFetch(`/produtos/${productId}`, { method: 'DELETE' })
+      if (window.history.length > 1) {
+        window.history.back()
+      } else {
+        window.location.href = onSuccessRedirect
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Erro ao excluir produto')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <AdminLayout title={`Editar ${title}`}>
       <div className="bg-white rounded-2xl shadow border p-6">
         <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
-            <ProductImagePreview
-              title={titulo}
-              descricaoCapa={descricaoCapa}
-              precoDisplay={precoInput ? formatBRL(onlyDigits(precoInput)) : 'R$ 0,00'}
-              previewSrc={imageFile ? URL.createObjectURL(imageFile) : (currentImageUrl ? resolveImageUrl(currentImageUrl) : undefined)}
-              placeholderChar={titulo.charAt(0) || '?'}
-            />
+            {/* Pré-visualização do card do produto */}
+            <div className="max-w-sm mx-auto">
+              <ProductCardWithImageControls
+                produto={{
+                  id: 'preview',
+                  titulo: titulo || 'Título do produto',
+                  preco: precoNumber,
+                  preco_promocional: precoPromocionalNumber,
+                  descricao_capa: descricaoCapa,
+                  descricao_geral: descricaoGeral,
+                  image_url: imageFile ? URL.createObjectURL(imageFile) : (currentImageUrl ? resolveImageUrl(currentImageUrl) : undefined),
+                  acompanhamentos: acompanhamentos
+                    .filter(a => a.nome && a.precoInput)
+                    .map(a => ({ nome: a.nome, preco: Number(onlyDigits(a.precoInput)) / 100 }))
+                }}
+                onAddToCart={() => {}}
+                showImageControls={true}
+                onImageTransform={setImageTransform}
+              />
+            </div>
             <p className="text-xs text-gray-500 mt-2 text-center">Pré-visualização do produto</p>
           </div>
 
@@ -245,9 +279,14 @@ export default function EditProductForm({ title, categoriaNome, onSuccessRedirec
             </div>
 
             {error && <div className="text-sm text-red-600">{error}</div>}
-            <button disabled={loading || !categoriaId} className="w-full md:w-auto px-4 py-2 bg-kaiserhaus-dark-brown text-white rounded hover:opacity-90 disabled:opacity-60">
-              {loading ? 'Salvando...' : (!categoriaId ? 'Carregando categoria...' : 'Salvar alterações')}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button disabled={loading || !categoriaId} className="w-full sm:w-auto px-4 py-2 bg-kaiserhaus-dark-brown text-white rounded hover:opacity-90 disabled:opacity-60">
+                {loading ? 'Salvando...' : (!categoriaId ? 'Carregando categoria...' : 'Salvar alterações')}
+              </button>
+              <button type="button" onClick={onDelete} disabled={loading} className="w-full sm:w-auto px-4 py-2 border border-red-300 text-red-700 rounded hover:bg-red-50 disabled:opacity-60">
+                Excluir produto
+              </button>
+            </div>
           </div>
         </form>
       </div>

@@ -27,12 +27,7 @@ const Login: React.FC = () => {
         return
       }
       
-      // Redirecionamento padrão
-      if (userType === 'cliente') {
-        window.location.href = '/'
-      } else {
-        window.location.href = '/admin/cardapio/entradas'
-      }
+      // O redirecionamento é feito automaticamente pelo AuthContext
     } catch (err: any) {
       setError(err?.message || 'Falha no login')
     } finally {

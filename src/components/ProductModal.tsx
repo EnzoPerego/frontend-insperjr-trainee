@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { useCart } from '../contexts/CartContext'
+
 import { useAvisoAdd } from '../contexts/AvisoAddContext'
+
+import { resolveImageUrl } from '../lib/utils'
+
 
 interface Acompanhamento {
   nome: string
@@ -10,6 +14,7 @@ interface Acompanhamento {
 interface Produto {
   id: string
   titulo: string
+  descricao_capa?: string
   descricao_geral?: string
   image_url?: string
   preco: number
@@ -92,7 +97,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
           <div className="w-full md:w-1/2 p-4 md:p-6 flex items-center">
             {produto.image_url ? (
               <img
-                src={produto.image_url}
+                src={resolveImageUrl(produto.image_url)}
                 alt={produto.titulo}
                 className="w-full h-full max-h-[300px] md:max-h-[500px] object-cover rounded-lg"
               />
@@ -126,9 +131,11 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
             </div>
 
             {/* ddescrição */}
-            {produto.descricao_geral && (
+            {(produto.descricao_capa || produto.descricao_geral) && (
               <div className="mb-6">
-                <p className="text-gray-700 leading-relaxed">{produto.descricao_geral}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {produto.descricao_capa || produto.descricao_geral}
+                </p>
               </div>
             )}
 

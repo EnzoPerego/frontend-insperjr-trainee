@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import AdminLayout from './AdminLayout'
-import ProductImagePreview from './ProductImagePreview'
-import { apiFetch } from '../utils/api'
-import { config } from '../config'
+import ProductCardWithImageControls from './ProductCardWithImageControls'
+import { apiFetch, apiUpload } from '../utils/api'
 
 type Props = {
   title: string
@@ -20,7 +19,7 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [categoriaId, setCategoriaId] = useState<string | null>(null)
-  // Controles de imagem moved to ProductImagePreview
+  const [imageTransform, setImageTransform] = useState<{ zoom: number; offsetX: number; offsetY: number }>({ zoom: 1, offsetX: 0, offsetY: 0 })
 
   // Buscar ID real da categoria por nome
   useEffect(() => {
@@ -64,9 +63,10 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
       if (imageFile) {
         const form = new FormData()
         form.append('file', imageFile)
-        const res = await fetch(`${config.API_BASE_URL}/files/upload`, { method: 'POST', body: form })
-        if (!res.ok) throw new Error('Falha no upload da imagem')
-        const data = await res.json()
+        form.append('zoom', imageTransform.zoom.toString())
+        form.append('offset_x', imageTransform.offsetX.toString())
+        form.append('offset_y', imageTransform.offsetY.toString())
+        const data = await apiUpload<{url: string}>('/files/upload-with-transform', form)
         finalImageUrl = data.url
       }
       const body = {
@@ -97,13 +97,22 @@ export default function AddProductForm({ title, categoriaNome, onSuccessRedirect
         <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
             {/* Pré-visualização do card do produto */}
-            <ProductImagePreview
-              title={titulo}
-              descricaoCapa={descricaoCapa}
-              precoDisplay={precoInput ? formatBRL(onlyDigits(precoInput)) : 'R$ 0,00'}
-              previewSrc={imageFile ? URL.createObjectURL(imageFile) : undefined}
-              placeholderChar={titulo.charAt(0) || '?'}
-            />
+            <div className="max-w-sm mx-auto">
+              <ProductCardWithImageControls
+                produto={{
+                  id: 'preview',
+                  titulo: titulo || 'Título do produto',
+                  preco: precoNumber,
+                  descricao_capa: descricaoCapa,
+                  descricao_geral: descricaoGeral,
+                  image_url: imageFile ? URL.createObjectURL(imageFile) : undefined,
+                  acompanhamentos: []
+                }}
+                onAddToCart={() => {}}
+                showImageControls={true}
+                onImageTransform={setImageTransform}
+              />
+            </div>
             <p className="text-xs text-gray-500 mt-2 text-center">Pré-visualização do produto</p>
           </div>
 
