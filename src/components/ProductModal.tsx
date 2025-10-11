@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useCart } from '../contexts/CartContext'
+import { useAvisoAdd } from '../contexts/AvisoAddContext'
 
 interface Acompanhamento {
   nome: string
@@ -24,6 +25,7 @@ interface ProductModalProps {
 
 const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose }) => {
   const { addItem } = useCart()
+  const { mostrarAviso } = useAvisoAdd()
   const [quantidade, setQuantidade] = useState(1)
   const [acompanhamentosSelecionados, setAcompanhamentosSelecionados] = useState<{ [key: string]: number }>({})
   const [observacoes, setObservacoes] = useState('')
@@ -69,12 +71,15 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
     }
 
     addItem(itemParaCarrinho)
-    onClose()
     
-    // Reset do modal
+    // Fechar modal e resetar
+    onClose()
     setQuantidade(1)
     setAcompanhamentosSelecionados({})
     setObservacoes('')
+    
+    // Mostrar aviso
+    mostrarAviso('Produto adicionado ao carrinho!', 'success', 2500)
   }
 
   const preco = produto.preco_promocional || produto.preco
