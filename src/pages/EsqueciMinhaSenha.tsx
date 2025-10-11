@@ -4,7 +4,6 @@ import { apiFetch } from '../utils/api'
 
 const EsqueciMinhaSenha: React.FC = () => {
   const [email, setEmail] = useState('')
-  const [userType, setUserType] = useState<'cliente' | 'funcionario'>('cliente')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -17,7 +16,7 @@ const EsqueciMinhaSenha: React.FC = () => {
     try {
       await apiFetch('/auth/esqueci-senha', {
         method: 'POST',
-        body: JSON.stringify({ email, user_type: userType })
+        body: JSON.stringify({ email })
       })
       
       setSuccess(true)
@@ -55,12 +54,6 @@ const EsqueciMinhaSenha: React.FC = () => {
                 <p className="text-gray-600 mb-6">
                   Se o email <strong>{email}</strong> estiver cadastrado, você receberá instruções para redefinir sua senha.
                 </p>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <p className="text-sm text-blue-800">
-                    <strong>Para teste:</strong> Verifique o console do backend para ver o token de reset.
-                  </p>
-                </div>
 
                 <div className="flex flex-col gap-3">
                   <button
@@ -101,27 +94,7 @@ const EsqueciMinhaSenha: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
-            <div className="px-6 pt-6">
-              <div className="flex rounded-lg p-1 bg-gray-100 text-sm font-medium w-full mb-5" role="tablist">
-                <button
-                  type="button"
-                  onClick={() => setUserType('cliente')}
-                  className={`flex-1 py-2 rounded-md transition ${userType === 'cliente' ? 'bg-white shadow text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
-                >
-                  Cliente
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={() => setUserType('funcionario')}
-                  className={`flex-1 py-2 rounded-md transition ${userType === 'funcionario' ? 'bg-white shadow text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
-                >
-                  Funcionário
-                </button>
-              </div>
-            </div>
-
-            <form onSubmit={onSubmit} className="px-6 pb-6">
+            <form onSubmit={onSubmit} className="px-6 py-6">
               <div className="mb-4">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email
