@@ -199,25 +199,25 @@ const Cardapio1: React.FC = () => {
       <div ref={topRef} className="min-h-screen bg-white py-10">
         {/* Header normal (rola com a página) */}
         <div className="bg-white">
-          <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
             {/* Top header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-1/3 text-left">
-                <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">Carta de vinhos</a>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="text-center sm:text-left order-2 sm:order-1">
+                <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="text-black hover:underline">Carta de vinhos</a>
               </div>
 
-              <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
-                <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-3xl font-extrabold tracking-wide">
+              <div className="text-center select-none order-1 sm:order-2" style={{ userSelect: 'none' }}>
+                <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-2xl sm:text-3xl font-extrabold tracking-wide">
                   Speisekarte
                 </div>
 
-                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="mt-2 text-gray-900 select-none">
+                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="mt-2 text-gray-900 select-none">
                   Cardápio
                 </div>
               </div>
 
-              <div className="w-1/3 text-right">
-                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">
+              <div className="text-center sm:text-right order-3">
+                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="text-black hover:underline">
                   Ver cardápio em PDF
                 </a>
               </div>
@@ -250,45 +250,45 @@ const Cardapio1: React.FC = () => {
 
         {/* Header sticky - apenas categorias */}
         <div className="sticky top-16 bg-white z-40 shadow-sm">
-          <div className="max-w-6xl mx-auto px-6 py-3">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
             {/* categorias (Montserrat 18) */}
-            <div className="flex justify-center gap-8">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 lg:gap-8">
               <button
                 onClick={scrollToEntradas}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'entradas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }}
+                className={`px-2 py-1 ${activeCategory === 'entradas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
                 Entradas
               </button>
 
               <button
                 onClick={scrollToPratos}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'pratos' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }}
+                className={`px-2 py-1 ${activeCategory === 'pratos' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
                 Pratos
               </button>
 
               <button
                 onClick={scrollToSobremesas}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'sobremesas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }}
+                className={`px-2 py-1 ${activeCategory === 'sobremesas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
                 Sobremesas
               </button>
 
               <button
                 onClick={scrollToCervejas}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'cervejas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }}
+                className={`px-2 py-1 ${activeCategory === 'cervejas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
                 Cervejas
               </button>
 
               <button
                 onClick={scrollToBebidas}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'bebidas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
+                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }}
+                className={`px-2 py-1 ${activeCategory === 'bebidas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
               >
                 Bebidas
               </button>
@@ -297,14 +297,14 @@ const Cardapio1: React.FC = () => {
         </div>
 
         {/* Conteúdo com padding para compensar o header fixo */}
-        <div className="max-w-6xl mx-auto px-6 pt-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
 
           {/* Entradas */}
           <section ref={entradasRef} id="entradas" className="mb-12">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                       <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Entradas</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 28 }} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-kaiserhaus-dark-brown">Entradas</h2>
               </div>
                     </div>
                     
@@ -329,7 +329,7 @@ const Cardapio1: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Pratos</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 28 }} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-kaiserhaus-dark-brown">Pratos</h2>
                     </div>
                   </div>
 
@@ -354,7 +354,7 @@ const Cardapio1: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                     <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Sobremesas</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 28 }} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-kaiserhaus-dark-brown">Sobremesas</h2>
               </div>
                   </div>
                   
@@ -379,7 +379,7 @@ const Cardapio1: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Cervejas</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 28 }} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-kaiserhaus-dark-brown">Cervejas</h2>
               </div>
             </div>
 
@@ -404,9 +404,9 @@ const Cardapio1: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Bebidas</h2>
+                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 28 }} className="text-2xl sm:text-3xl lg:text-4xl font-bold text-kaiserhaus-dark-brown">Bebidas</h2>
               </div>
-              <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 20 }} className="text-kaiserhaus-dark-brown hover:underline">Carta de vinhos</a>
+              <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="text-kaiserhaus-dark-brown hover:underline text-sm sm:text-base">Carta de vinhos</a>
             </div>
 
             <hr className="border-t border-gray-200 mb-6" />
@@ -429,8 +429,8 @@ const Cardapio1: React.FC = () => {
         </div>
 
         {/* botão "Voltar ao topo" FIXO */}
-        <div style={{ zIndex: 60 }} className="fixed left-1/2 transform -translate-x-1/2 bottom-6">
-          <button onClick={scrollToTop} className="px-6 py-3 rounded-md bg-gray-100 shadow" aria-label="Voltar ao topo">
+        <div style={{ zIndex: 60 }} className="fixed left-1/2 transform -translate-x-1/2 bottom-4 sm:bottom-6">
+          <button onClick={scrollToTop} className="px-4 py-2 sm:px-6 sm:py-3 rounded-md bg-gray-100 shadow text-sm sm:text-base" aria-label="Voltar ao topo">
             Voltar ao topo
           </button>
         </div>
