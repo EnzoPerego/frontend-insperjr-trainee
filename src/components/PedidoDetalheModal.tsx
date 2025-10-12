@@ -50,7 +50,7 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/40">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h3 className="text-lg font-semibold">Detalhes do Pedido</h3>
@@ -65,7 +65,7 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 text-sm">{erro}</div>
           ) : pedido ? (
             <>
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div>
                   <p className="text-gray-500">Número</p>
                   <p className="font-medium">#{String(pedido.id || '').padStart(4, '0')}</p>
@@ -99,7 +99,7 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
                      pedido?.metodo_pagamento || '-'}
                   </p>
                 </div>
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <p className="text-gray-500">Endereço</p>
                   <p className="font-medium">
                     {pedido?.metodo_entrega === 'pickup' 
@@ -110,7 +110,7 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
                   </p>
                 </div>
                 {pedido?.observacoes && (
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <p className="text-gray-500">Observações</p>
                     <p className="font-medium">{pedido.observacoes}</p>
                   </div>
@@ -118,8 +118,8 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
               </div>
               <div className="pt-2">
                 <p className="text-sm font-semibold mb-2">Itens</p>
-                <div className="rounded-md border">
-                  <table className="w-full text-sm">
+                <div className="rounded-md border overflow-x-auto">
+                  <table className="w-full text-sm min-w-[300px]">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="text-left px-3 py-2">Produto</th>
@@ -139,7 +139,7 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
                   </table>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div>
                   <p className="text-gray-500">Subtotal</p>
                   <p className="font-medium">{formatCurrency(Number(pedido?.subtotal || 0))}</p>

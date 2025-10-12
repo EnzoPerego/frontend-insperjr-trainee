@@ -280,10 +280,10 @@ const PerfilCliente: React.FC = () => {
 
           <div className="bg-white rounded-lg shadow-sm mb-6">
             <div className="border-b border-gray-200">
-              <nav className="flex space-x-8 px-6">
+              <nav className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8 px-4 sm:px-6">
                 <button
                   onClick={() => setActiveTab('perfil')}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'perfil'
                       ? 'border-kaiserhaus-dark-brown text-kaiserhaus-dark-brown'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -293,7 +293,7 @@ const PerfilCliente: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab('pedidos')}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'pedidos'
                       ? 'border-kaiserhaus-dark-brown text-kaiserhaus-dark-brown'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -303,7 +303,7 @@ const PerfilCliente: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab('enderecos')}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'enderecos'
                       ? 'border-kaiserhaus-dark-brown text-kaiserhaus-dark-brown'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -318,14 +318,14 @@ const PerfilCliente: React.FC = () => {
              
               {activeTab === 'perfil' && (
                 <div>
-                  <div className="flex justify-between items-center mb-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                     <h2 className="text-xl font-semibold text-gray-900">
                       Informações Pessoais
                     </h2>
                     {!isEditing && (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
+                        className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
                       >
                         Editar
                       </button>
@@ -371,10 +371,10 @@ const PerfilCliente: React.FC = () => {
                         />
                       </div>
 
-                      <div className="flex space-x-3">
+                      <div className="flex flex-col sm:flex-row gap-3">
                         <button
                           onClick={handleSaveProfile}
-                          className="bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
+                          className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
                         >
                           Salvar
                         </button>
@@ -387,7 +387,7 @@ const PerfilCliente: React.FC = () => {
                               telefone: cliente?.telefone || ''
                             })
                           }}
-                          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors"
+                          className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors"
                         >
                           Cancelar
                         </button>
@@ -577,7 +577,7 @@ const PerfilCliente: React.FC = () => {
                               </div>
                             </div>
                             
-                            <div className="ml-6 flex space-x-2">
+                            <div className="ml-6 flex flex-col sm:flex-row gap-2">
                               <button
                                 onClick={() => handleEditAddress(endereco)}
                                 className="bg-kaiserhaus-dark-brown text-white px-4 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors flex items-center gap-2"
@@ -631,8 +631,8 @@ const PerfilCliente: React.FC = () => {
                         </button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="md:col-span-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Rua *
                           </label>
@@ -697,7 +697,7 @@ const PerfilCliente: React.FC = () => {
                           />
                         </div>
                         
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Complemento
                           </label>
@@ -711,16 +711,16 @@ const PerfilCliente: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-end space-x-3 pt-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
                         <button
                           onClick={handleCancelEdit}
-                          className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                          className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-colors"
                         >
                           Cancelar
                         </button>
                         <button
                           onClick={editingAddressId ? handleUpdateAddress : handleAddAddress}
-                          className="bg-kaiserhaus-dark-brown text-white px-6 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
+                          className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-6 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors"
                         >
                           {editingAddressId ? 'Atualizar Endereço' : 'Salvar Endereço'}
                         </button>

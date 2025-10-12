@@ -20,8 +20,6 @@ const CartaVinhos: React.FC = () => {
   const brancosRef = useRef<HTMLElement>(null)
   const roseRef = useRef<HTMLElement>(null)
 
-  // categoria ativa (IntersectionObserver)
-  const [activeCategory, setActiveCategory] = useState<string>('')
 
   useEffect(() => {
     const load = async () => {
@@ -95,42 +93,8 @@ const CartaVinhos: React.FC = () => {
     if (!el) return
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-  const scrollToTintos = () => scrollToRef(tintosRef)
-  const scrollToBrancos = () => scrollToRef(brancosRef)
-  const scrollToRose = () => scrollToRef(roseRef)
   const scrollToTop = () => scrollToRef(topRef)
 
-  /* IntersectionObserver pra destacar categoria ativa */
-  useEffect(() => {
-    const sections: { id: string; ref: React.RefObject<HTMLElement | HTMLDivElement | null> }[] = [
-      { id: 'tintos', ref: tintosRef },
-      { id: 'brancos', ref: brancosRef },
-      { id: 'rose', ref: roseRef },
-    ]
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (visible) {
-          setActiveCategory(visible.target.id)
-        }
-      },
-      {
-        root: null,
-        threshold: [0.25, 0.4, 0.6],
-        rootMargin: '0px 0px -30% 0px',
-      }
-    )
-
-    sections.forEach((s) => {
-      if (s.ref.current) observer.observe(s.ref.current)
-    })
-
-    return () => observer.disconnect()
-  }, [produtos, categorias])
 
   if (loading) {
     return (
@@ -148,37 +112,36 @@ const CartaVinhos: React.FC = () => {
   return (
     <Layout>
       <div ref={topRef} className="min-h-screen bg-white py-10">
-        {/* Header fixo */}
-        <div className="fixed top-16 left-0 right-0 bg-white z-40 shadow-sm">
+        {/* Header normal (rola com a página) */}
+        <div className="bg-white">
           <div className="max-w-6xl mx-auto px-6 py-4">
             {/* Top header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-1/3 text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="text-center sm:text-left">
                 <a href="/cardapio" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">Voltar ao cardápio</a>
               </div>
 
-              <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
-                <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-3xl font-extrabold tracking-wide">
+              <div className="text-center select-none" style={{ userSelect: 'none' }}>
+                <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-2xl sm:text-3xl font-extrabold tracking-wide">
                   Weinkarte
                 </div>
 
-                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="mt-2 text-gray-900 select-none">
+                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="mt-2 text-gray-900 select-none">
                   Carta de Vinhos
                 </div>
               </div>
 
-              <div className="w-1/3 text-right">
-                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-kaiserhaus-dark-brown hover:underline">
+              <div className="text-center sm:text-right">
+                <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 16 }} className="text-kaiserhaus-dark-brown hover:underline">
                   Ver cardápio em PDF
                 </a>
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* Conteúdo com padding para compensar o header fixo */}
-        <div className="max-w-6xl mx-auto px-6 pt-20">
+        {/* Conteúdo normal */}
+        <div className="max-w-6xl mx-auto px-6 pt-8">
 
           {/* Vinhos Tintos */}
           <section ref={tintosRef} id="tintos" className="mb-12">

@@ -23,7 +23,7 @@ const Cardapio1: React.FC = () => {
   const bebidasRef = useRef<HTMLElement>(null)
 
   // categoria ativa (IntersectionObserver)
-  const [activeCategory, setActiveCategory] = useState<string>('')
+  const [activeCategory, setActiveCategory] = useState<string>('entradas')
   
   // busca
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -139,23 +139,43 @@ const Cardapio1: React.FC = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (visible) {
-          setActiveCategory(visible.target.id)
+        // Encontrar a seção que está mais visível no topo da viewport
+        const visibleEntries = entries.filter(e => e.isIntersecting)
+        
+        if (visibleEntries.length > 0) {
+          // Ordenar por posição no topo da viewport (menor top = mais próximo do topo)
+          const sortedByTop = visibleEntries.sort((a, b) => {
+            const aTop = a.boundingClientRect.top
+            const bTop = b.boundingClientRect.top
+            return Math.abs(aTop) - Math.abs(bTop)
+          })
+          
+          const activeSection = sortedByTop[0]
+          setActiveCategory(activeSection.target.id)
+        } else {
+          // Se nenhuma seção está visível, encontrar a mais próxima do topo
+          const allEntries = entries.sort((a, b) => {
+            const aTop = Math.abs(a.boundingClientRect.top)
+            const bTop = Math.abs(b.boundingClientRect.top)
+            return aTop - bTop
+          })
+          
+          if (allEntries.length > 0) {
+            setActiveCategory(allEntries[0].target.id)
+          }
         }
       },
       {
         root: null,
-        threshold: [0.25, 0.4, 0.6],
-        rootMargin: '0px 0px -30% 0px',
+        threshold: [0.1, 0.3, 0.5],
+        rootMargin: '-100px 0px -50% 0px', // Margem para considerar o header sticky
       }
     )
 
     sections.forEach((s) => {
-      if (s.ref.current) observer.observe(s.ref.current)
+      if (s.ref.current) {
+        observer.observe(s.ref.current)
+      }
     })
 
     return () => observer.disconnect()
