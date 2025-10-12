@@ -34,12 +34,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       ]
     },
     {
-      title: "Configuração",
-      items: [
-        { id: "categorias", label: "Categorias" }
-      ]
-    },
-    {
       title: "Pedidos",
       items: [
         { id: "pendentes", label: "Pendentes" },
@@ -118,8 +112,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       window.location.href = '/admin/funcionarios'
     } else if (section === 'funcionários' && subSection === 'adicionar') {
       window.location.href = '/admin/funcionarios/novo'
-    } else if (section === 'configuração' && subSection === 'categorias') {
-      window.location.href = '/admin/categorias'
     }
     
     // Callback para atualizar estado local

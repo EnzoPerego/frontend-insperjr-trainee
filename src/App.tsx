@@ -17,7 +17,6 @@ import CadastroCliente from './pages/CadastroCliente'
 import EsqueciMinhaSenha from './pages/EsqueciMinhaSenha'
 import RedefinirSenha from './pages/RedefinirSenha'
 import AdminAddProduto from './pages/AdminAddProduto'
-import AdminCategorias from './pages/AdminCategorias'
 import EditProductForm from './components/EditProductForm'
 
 import Carrinho from './pages/Carrinho'
@@ -219,15 +218,6 @@ function App(): React.JSX.Element {
         </AdminGuard>
       )
     }
-
-    if (currentPath === '/admin/categorias') {
-      return (
-        <AdminGuard>
-          <AdminCategorias />
-        </AdminGuard>
-      )
-    }
-
 
     if (currentPath === '/admin/funcionarios') {
       return (
