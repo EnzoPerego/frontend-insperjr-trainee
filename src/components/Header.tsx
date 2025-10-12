@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             >
               Cardápio
             </a>
-            {user && (
+            {user && user.user_type === 'cliente' && (
               <a 
                 href="/perfil" 
                 className="text-white hover:text-white/80 transition-colors font-montserrat text-sm lg:text-base"
@@ -127,7 +127,7 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               >
                 Cardápio
               </a>
-              {user && (
+              {user && user.user_type === 'cliente' && (
                 <a 
                   href="/perfil" 
                   className="px-4 py-3 text-white hover:text-white/80 transition-colors font-montserrat border-b border-kaiserhaus-light-brown"
