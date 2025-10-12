@@ -19,11 +19,10 @@ const Cardapio1: React.FC = () => {
   const entradasRef = useRef<HTMLElement>(null)
   const pratosRef = useRef<HTMLElement>(null)
   const sobremesasRef = useRef<HTMLElement>(null)
-  const cervejasRef = useRef<HTMLElement>(null)
   const bebidasRef = useRef<HTMLElement>(null)
 
   // categoria ativa (IntersectionObserver)
-  const [activeCategory, setActiveCategory] = useState<string>('entradas')
+  const [activeCategory, setActiveCategory] = useState<string>('')
   
   // busca
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -69,7 +68,6 @@ const Cardapio1: React.FC = () => {
   const produtosEntradas: Produto[] = getProdutosByCategory('entrada')
   const produtosPratos: Produto[] = getProdutosByCategory('prato')
   const produtosSobremesas: Produto[] = getProdutosByCategory('sobremesa')
-  const produtosCervejas: Produto[] = getProdutosByCategory('cerveja')
   const produtosBebidas: Produto[] = getProdutosByCategory('bebida')
 
   // Função de busca
@@ -115,17 +113,25 @@ const Cardapio1: React.FC = () => {
   }
 
   /* scroll helpers (âncoras) */
-  const scrollToRef = (r: React.RefObject<HTMLElement | HTMLDivElement | null>) => {
+  const scrollToRef = (r: React.RefObject<HTMLElement | HTMLDivElement | null>, categoryId: string) => {
     const el = r.current
     if (!el) return
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    
+    
+    setActiveCategory(categoryId)
+    
+
+    const yOffset = -164
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset
+    
+ 
+    window.scrollTo({ top: y, behavior: 'smooth' })
   }
-  const scrollToEntradas = () => scrollToRef(entradasRef)
-  const scrollToPratos = () => scrollToRef(pratosRef)
-  const scrollToSobremesas = () => scrollToRef(sobremesasRef)
-  const scrollToCervejas = () => scrollToRef(cervejasRef)
-  const scrollToBebidas = () => scrollToRef(bebidasRef)
-  const scrollToTop = () => scrollToRef(topRef)
+  const scrollToEntradas = () => scrollToRef(entradasRef, 'entradas')
+  const scrollToPratos = () => scrollToRef(pratosRef, 'pratos')
+  const scrollToSobremesas = () => scrollToRef(sobremesasRef, 'sobremesas')
+  const scrollToBebidas = () => scrollToRef(bebidasRef, 'bebidas')
+  const scrollToTop = () => scrollToRef(topRef, '')
 
   /* IntersectionObserver pra destacar categoria ativa */
   useEffect(() => {
@@ -133,49 +139,35 @@ const Cardapio1: React.FC = () => {
       { id: 'entradas', ref: entradasRef },
       { id: 'pratos', ref: pratosRef },
       { id: 'sobremesas', ref: sobremesasRef },
-      { id: 'cervejas', ref: cervejasRef },
       { id: 'bebidas', ref: bebidasRef },
     ]
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Encontrar a seção que está mais visível no topo da viewport
-        const visibleEntries = entries.filter(e => e.isIntersecting)
-        
-        if (visibleEntries.length > 0) {
-          // Ordenar por posição no topo da viewport (menor top = mais próximo do topo)
-          const sortedByTop = visibleEntries.sort((a, b) => {
-            const aTop = a.boundingClientRect.top
-            const bTop = b.boundingClientRect.top
-            return Math.abs(aTop) - Math.abs(bTop)
-          })
-          
-          const activeSection = sortedByTop[0]
-          setActiveCategory(activeSection.target.id)
-        } else {
-          // Se nenhuma seção está visível, encontrar a mais próxima do topo
-          const allEntries = entries.sort((a, b) => {
-            const aTop = Math.abs(a.boundingClientRect.top)
-            const bTop = Math.abs(b.boundingClientRect.top)
-            return aTop - bTop
-          })
-          
-          if (allEntries.length > 0) {
-            setActiveCategory(allEntries[0].target.id)
+  
+        let maxRatio = 0
+        let mostVisible: Element | null = null
+
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio
+            mostVisible = entry.target
           }
+        })
+
+        if (mostVisible) {
+          setActiveCategory(mostVisible.id)
         }
       },
       {
         root: null,
-        threshold: [0.1, 0.3, 0.5],
-        rootMargin: '-100px 0px -50% 0px', // Margem para considerar o header sticky
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+        rootMargin: '-100px 0px -60% 0px',
       }
     )
 
     sections.forEach((s) => {
-      if (s.ref.current) {
-        observer.observe(s.ref.current)
-      }
+      if (s.ref.current) observer.observe(s.ref.current)
     })
 
     return () => observer.disconnect()
@@ -278,14 +270,6 @@ const Cardapio1: React.FC = () => {
               </button>
 
               <button
-                onClick={scrollToCervejas}
-                style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
-                className={`${activeCategory === 'cervejas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
-              >
-                Cervejas
-              </button>
-
-              <button
                 onClick={scrollToBebidas}
                 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }}
                 className={`${activeCategory === 'bebidas' ? 'text-kaiserhaus-dark-brown font-bold border-b-2 border-kaiserhaus-dark-brown pb-1' : 'text-gray-700 font-normal'}`}
@@ -371,31 +355,6 @@ const Cardapio1: React.FC = () => {
                       />
                     ))}
                   </div>
-            )}
-          </section>
-
-          {/* Cervejas */}
-          <section ref={cervejasRef} id="cervejas" className="mb-12">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <div className="w-1 h-8 bg-kaiserhaus-dark-brown mr-4"></div>
-                <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 35 }} className="font-bold text-kaiserhaus-dark-brown">Cervejas</h2>
-              </div>
-            </div>
-
-            <hr className="border-t border-gray-200 mb-6" />
-
-            {produtosCervejas.length === 0 ? (
-              <p className="text-gray-600">Nenhuma cerveja cadastrada.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {produtosCervejas.map((p) => (
-                  <ProductCardWrapper
-                    key={String(p.id)}
-                    produto={p}
-                  />
-                ))}
-                </div>
             )}
           </section>
 
