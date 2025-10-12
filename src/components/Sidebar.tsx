@@ -34,6 +34,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       ]
     },
     {
+      title: "Configuração",
+      items: [
+        { id: "categorias", label: "Categorias" }
+      ]
+    },
+    {
       title: "Pedidos",
       items: [
         { id: "pendentes", label: "Pendentes" },
@@ -48,15 +54,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       ]
     },
     {
-      title: "Configuração",
+      title: "Perfil",
       items: [
-        { id: "categorias", label: "Categorias" }
+        { id: "meu-perfil", label: "Meu Perfil" }
       ]
     }
   ]
 
 
   const motoboyMenuItems: MenuSection[] = [
+    {
+      title: "Perfil",
+      items: [
+        { id: "meu-perfil", label: "Meu Perfil" }
+      ]
+    },
     {
       title: "Entregas",
       items: [
@@ -70,13 +82,17 @@ const Sidebar: React.FC<SidebarProps> = ({
     ? motoboyMenuItems
     : isAdmin 
       ? allMenuItems 
-      : allMenuItems.filter(section => section.title === "Pedidos")
+      : allMenuItems.filter(section => section.title === "Perfil" || section.title === "Pedidos")
 
   // Função para lidar com navegação
   const handleNavigation = (section: string, subSection: string): void => {
     // Fechar menu mobile
     onMobileMenuClose()
     
+    if (subSection === 'meu-perfil') {
+      window.location.href = '/perfil-funcionario'
+      return
+    }
 
     if (isMotoboy) {
       if (subSection === 'pedidos-prontos') {

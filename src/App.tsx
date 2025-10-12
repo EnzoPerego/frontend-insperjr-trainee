@@ -26,6 +26,7 @@ import Pagamento from './pages/Pagamento'
 import PedidoConfirmado from './pages/PedidoConfirmado'
 import MeusPedidos from './pages/MeusPedidos'
 import PerfilCliente from './pages/PerfilCliente'
+import PerfilFuncionario from './pages/PerfilFuncionario'
 import Cardapio1 from './pages/Cardapio1'
 import CartaVinhos from './pages/CartaVinhos'
 import Busca from './pages/Busca'
@@ -331,6 +332,10 @@ function App(): React.JSX.Element {
 
     if (currentPath === '/perfil') {
       return <PerfilCliente />
+    }
+
+    if (currentPath === '/perfil-funcionario') {
+      return <PerfilFuncionario />
     }
 
     // Página padrão (Home)

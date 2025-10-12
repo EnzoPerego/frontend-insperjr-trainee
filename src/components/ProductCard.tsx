@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const descricaoFinal = descricao || produto.descricao_capa || produto.descricao_geral || produto.descricao || "Descrição do produto"
 
   return (
-    <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col" style={{ minHeight: '450px' }}>
+    <article className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col relative" style={{ minHeight: '450px' }}>
       <div className="w-full aspect-[4/3] bg-gray-200 flex items-center justify-center overflow-hidden">
         {produto.image_url ? (
           <img
