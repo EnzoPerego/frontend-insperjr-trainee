@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { apiFetch } from '../utils/api'
 import { formatCurrency } from '../lib/utils'
+import { HistoricoStatus } from '../types'
 
 type Props = {
   pedidoId: string | null
@@ -12,6 +13,8 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
   const [loading, setLoading] = useState<boolean>(false)
   const [erro, setErro] = useState<string | null>(null)
   const [pedido, setPedido] = useState<any | null>(null)
+  const [historico, setHistorico] = useState<HistoricoStatus[]>([])
+  const [loadingHistorico, setLoadingHistorico] = useState<boolean>(false)
 
   useEffect(() => {
     if (!open || !pedidoId) return
@@ -19,9 +22,22 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
       setLoading(true)
       setErro(null)
       setPedido(null)
+      setHistorico([])
       try {
         const data = await apiFetch<any>(`/pedidos/${pedidoId}`)
         setPedido(data)
+        
+        // Carregar histórico de status
+        setLoadingHistorico(true)
+        try {
+          const historicoData = await apiFetch<HistoricoStatus[]>(`/pedidos/${pedidoId}/historico`)
+          setHistorico(historicoData || [])
+        } catch (e) {
+          console.warn('Erro ao carregar histórico:', e)
+          setHistorico([])
+        } finally {
+          setLoadingHistorico(false)
+        }
       } catch (e: any) {
         setErro(e?.message || 'Erro ao carregar detalhes do pedido')
       } finally {
@@ -66,12 +82,39 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
                   <p className="text-gray-500">Criado em</p>
                   <p className="font-medium">{pedido?.created_at ? new Date(pedido.created_at).toLocaleString('pt-BR') : '-'}</p>
                 </div>
+                <div>
+                  <p className="text-gray-500">Método de entrega</p>
+                  <p className="font-medium">
+                    {pedido?.metodo_entrega === 'delivery' ? 'Entrega' : 
+                     pedido?.metodo_entrega === 'pickup' ? 'Retirada no restaurante' : '-'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Método de pagamento</p>
+                  <p className="font-medium">
+                    {pedido?.metodo_pagamento === 'cash' ? 'Dinheiro' : 
+                     pedido?.metodo_pagamento === 'credit' ? 'Cartão de Crédito' :
+                     pedido?.metodo_pagamento === 'debit' ? 'Cartão de Débito' :
+                     pedido?.metodo_pagamento === 'pix' ? 'PIX' :
+                     pedido?.metodo_pagamento || '-'}
+                  </p>
+                </div>
                 <div className="col-span-2">
                   <p className="text-gray-500">Endereço</p>
                   <p className="font-medium">
-                    {pedido?.endereco ? `${pedido.endereco.rua}, ${pedido.endereco.numero} - ${pedido.endereco.bairro}, ${pedido.endereco.cidade}` : '-'}
+                    {pedido?.metodo_entrega === 'pickup' 
+                      ? 'Retirada no restaurante' 
+                      : pedido?.endereco 
+                        ? `${pedido.endereco.rua}, ${pedido.endereco.numero} - ${pedido.endereco.bairro}, ${pedido.endereco.cidade}` 
+                        : '-'}
                   </p>
                 </div>
+                {pedido?.observacoes && (
+                  <div className="col-span-2">
+                    <p className="text-gray-500">Observações</p>
+                    <p className="font-medium">{pedido.observacoes}</p>
+                  </div>
+                )}
               </div>
               <div className="pt-2">
                 <p className="text-sm font-semibold mb-2">Itens</p>
@@ -113,6 +156,38 @@ export default function PedidoDetalheModal({ pedidoId, open, onClose }: Props): 
                   <p className="text-gray-500">Total</p>
                   <p className="font-semibold text-kaiserhaus-light-brown">{formatCurrency(Number(pedido?.total || 0))}</p>
                 </div>
+              </div>
+              
+              {/* historiico de mudanca de status */}
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-sm font-semibold mb-3 text-gray-900">Histórico de Status</p>
+                {loadingHistorico ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-kaiserhaus-dark-brown"></div>
+                  </div>
+                ) : historico.length > 0 ? (
+                  <div className="space-y-2">
+                    {historico.map((item, index) => (
+                      <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-2 h-2 bg-kaiserhaus-dark-brown rounded-full"></div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{item.novo_status}</p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(item.data_hora).toLocaleString('pt-BR')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-gray-500">Funcionário</p>
+                          <p className="text-sm font-medium text-gray-700">{item.funcionario}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 text-center py-4">Nenhum histórico disponível</p>
+                )}
               </div>
             </>
           ) : (

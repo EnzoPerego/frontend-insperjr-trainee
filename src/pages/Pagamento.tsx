@@ -152,6 +152,7 @@ const Pagamento: React.FC = () => {
           quantidade: item.quantidade
         })),
         metodo_pagamento: paymentMethod,
+        metodo_entrega: deliveryInfo.metodo,
         observacoes: observacoes,
         taxa_entrega: calculateDeliveryFee(),
         desconto: 0
