@@ -43,7 +43,7 @@ const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ currentStep, classN
           
           {/* Linha conectora */}
           {index < steps.length - 1 && (
-            <div className="w-6 h-px sm:w-8 sm:h-px bg-kaiserhaus-dark-brown mx-2 sm:mx-4"></div>
+            <div className="w-6 h-px sm:w-8 sm:h-px bg-kaiserhaus-dark-brown mx-2 sm:mx-4 -mt-6 sm:-mt-7"></div>
           )}
         </div>
       ))}

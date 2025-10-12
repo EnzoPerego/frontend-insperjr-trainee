@@ -48,6 +48,15 @@ export interface PedidoItem {
   preco: number;
 }
 
+// Interface para histórico de status
+export interface HistoricoStatus {
+  id: string;
+  pedido: string;
+  funcionario: string;
+  novo_status: string;
+  data_hora: string;
+}
+
 // Tipos para categorias
 export interface Categoria {
   id: string;

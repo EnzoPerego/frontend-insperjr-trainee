@@ -96,7 +96,7 @@ const FormasEntrega: React.FC = () => {
     
     // Salvar informações na sessão/localStorage para usar na página de pagamento
     const deliveryInfo = {
-      method: deliveryMethod,
+      metodo: deliveryMethod,
       addressIndex: deliveryMethod === 'delivery' ? selectedAddressIndex : null
     }
     localStorage.setItem('deliveryInfo', JSON.stringify(deliveryInfo))

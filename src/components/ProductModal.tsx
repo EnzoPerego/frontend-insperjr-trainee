@@ -142,7 +142,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ produto, isOpen, onClose })
             {/* acompanhamentos */}
             {produto.acompanhamentos && produto.acompanhamentos.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Incluir ao pedido</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Acompanhamentos</h3>
                 <div className="space-y-3">
                   {produto.acompanhamentos.map((acompanhamento, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">

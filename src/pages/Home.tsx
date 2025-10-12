@@ -183,7 +183,7 @@ export default function Home(): React.JSX.Element {
 
           <div className="text-center mt-10">
             <a
-              href="#menu"
+              href="/cardapio"
               className="inline-flex items-center rounded-full bg-kaiserhaus-dark-brown px-6 py-3 font-semibold text-white hover:opacity-90 transition"
             >
               Veja o cardápio completo
