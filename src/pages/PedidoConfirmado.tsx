@@ -112,7 +112,7 @@ const PedidoConfirmado: React.FC<PedidoConfirmadoProps> = ({ pedidoId }) => {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
               
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
