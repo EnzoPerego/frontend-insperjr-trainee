@@ -240,8 +240,8 @@ const FormasEntrega: React.FC = () => {
                         Adicionar novo endereço
                       </h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div className="md:col-span-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Rua *
                           </label>
@@ -306,7 +306,7 @@ const FormasEntrega: React.FC = () => {
                           />
                         </div>
                         
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Complemento
                           </label>
@@ -320,16 +320,16 @@ const FormasEntrega: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-between pt-3">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-3 pt-3">
                         <button
                           onClick={() => setShowAddressForm(false)}
-                          className="text-gray-600 hover:text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                          className="w-full sm:w-auto text-gray-600 hover:text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                         >
                           Cancelar
                         </button>
                         <button
                           onClick={handleAddNewAddress}
-                          className="bg-kaiserhaus-dark-brown text-white px-5 py-2 rounded-lg font-medium hover:bg-kaiserhaus-light-brown transition-colors shadow-md hover:shadow-lg"
+                          className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-5 py-2 rounded-lg font-medium hover:bg-kaiserhaus-light-brown transition-colors shadow-md hover:shadow-lg"
                         >
                           Salvar endereço
                         </button>
@@ -368,10 +368,10 @@ const FormasEntrega: React.FC = () => {
               </div>
 
             
-              <div className="flex justify-end">
+              <div className="flex justify-center sm:justify-end">
                 <button
                   onClick={handleContinueToPayment}
-                  className="bg-kaiserhaus-dark-brown text-white px-6 py-2 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors shadow-md hover:shadow-lg"
+                  className="w-full sm:w-auto bg-kaiserhaus-dark-brown text-white px-6 py-3 rounded-lg font-semibold hover:bg-kaiserhaus-light-brown transition-colors shadow-md hover:shadow-lg"
                 >
                   IR PARA O PAGAMENTO
                 </button>

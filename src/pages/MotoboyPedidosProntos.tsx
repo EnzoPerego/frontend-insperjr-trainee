@@ -71,7 +71,7 @@ const MotoboyPedidosProntos: React.FC = () => {
             <p className="text-gray-600">Não há pedidos prontos para entrega no momento.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {pedidos.map((pedido) => (
               <div key={pedido.id} className="bg-white rounded-lg border shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start mb-4">

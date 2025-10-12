@@ -133,7 +133,7 @@ const MotoboyEntrega: React.FC = () => {
   return (
     <AdminLayout title="Detalhes da Entrega" activeSection={activeSection} onSectionChange={setActiveSection}>
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Entrega - {detalhes.numero}
@@ -142,13 +142,13 @@ const MotoboyEntrega: React.FC = () => {
           </div>
           <button
             onClick={() => window.location.href = '/motoboy/pedidos-prontos'}
-            className="text-sm text-blue-700 hover:underline"
+            className="w-full sm:w-auto text-sm text-blue-700 hover:underline px-4 py-2 border border-blue-700 rounded-lg hover:bg-blue-50 transition-colors"
           >
             Voltar
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg border shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Informações do Cliente</h2>
             
