@@ -7,7 +7,6 @@ import { Produto, Categoria } from '../types'
 
 const CartaVinhos: React.FC = () => {
   const [produtos, setProdutos] = useState<Produto[]>([])
-  const [categorias, setCategorias] = useState<Categoria[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
   // modal
@@ -20,7 +19,6 @@ const CartaVinhos: React.FC = () => {
         setLoading(true)
         const cats = await apiFetch<Categoria[]>('/categorias')
         const prods = await apiFetch<Produto[]>('/produtos')
-        setCategorias(cats || [])
         
  
         const categoriaVinhos = cats?.find(c => c.nome.toLowerCase().includes('vinho'))
@@ -80,14 +78,14 @@ const CartaVinhos: React.FC = () => {
         <div className="bg-white">
           <div className="max-w-6xl mx-auto px-6 py-4">
             {/* Top header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-              <div className="order-2 sm:order-1 text-center sm:text-left">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-1/3 text-left">
                 <a href="/cardapio" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">
                   Voltar ao cardápio
                 </a>
               </div>
 
-              <div className="order-1 sm:order-2 text-center select-none" style={{ userSelect: 'none' }}>
+              <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
                 <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-2xl sm:text-3xl font-extrabold tracking-wide">
                   Weinkarte
                 </div>
@@ -97,7 +95,7 @@ const CartaVinhos: React.FC = () => {
                 </div>
               </div>
 
-              <div className="order-3 text-center sm:text-right">
+              <div className="w-1/3 text-right">
                 <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">
                   Ver cardápio em PDF
                 </a>
@@ -123,7 +121,7 @@ const CartaVinhos: React.FC = () => {
             {produtos.length === 0 ? (
               <p className="text-gray-600">Nenhum vinho cadastrado.</p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {produtos.map(produto => (
                   <ProductCardWrapper key={produto.id} produto={produto} />
                 ))}
@@ -139,10 +137,6 @@ const CartaVinhos: React.FC = () => {
           produto={modalProduto}
           isOpen={isModalOpen}
           onClose={closeProductModal}
-          onAddToCart={(quantidade) => {
-           
-            console.log('Adicionar ao carrinho:', modalProduto.titulo, quantidade)
-          }}
         />
       )}
     </Layout>

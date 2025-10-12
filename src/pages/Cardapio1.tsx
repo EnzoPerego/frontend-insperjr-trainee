@@ -193,12 +193,12 @@ const Cardapio1: React.FC = () => {
         <div className="bg-white">
           <div className="max-w-6xl mx-auto px-6 py-4">
             {/* Top header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-              <div className="order-2 sm:order-1 text-center sm:text-left">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-1/3 text-left">
                 <a href="/carta-vinhos" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">Carta de vinhos</a>
               </div>
 
-              <div className="order-1 sm:order-2 text-center select-none" style={{ userSelect: 'none' }}>
+              <div className="w-1/3 text-center select-none" style={{ userSelect: 'none' }}>
                 <div style={{ fontFamily: 'Montserrat, sans-serif' }} className="text-2xl sm:text-3xl font-extrabold tracking-wide">
                   Speisekarte
                 </div>
@@ -208,7 +208,7 @@ const Cardapio1: React.FC = () => {
                 </div>
               </div>
 
-              <div className="order-3 text-center sm:text-right">
+              <div className="w-1/3 text-right">
                 <a href="/Cardápio Trainee.pdf" target="_blank" rel="noreferrer" style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 18 }} className="text-black hover:underline">
                   Ver cardápio em PDF
                 </a>

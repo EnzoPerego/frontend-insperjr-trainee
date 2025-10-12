@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import ProductModal from '../components/ProductModal'
+import ProductCard from '../components/ProductCard'
 import { apiFetch } from '../utils/api'
 
 interface Produto {
@@ -8,7 +9,9 @@ interface Produto {
   titulo: string
   preco: number
   preco_promocional?: number
+  descricao_capa?: string
   descricao_geral?: string
+  descricao?: string
   image_url?: string
   categoria?: {
     id: string
@@ -94,6 +97,21 @@ const Busca: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setModalProduto(null)
+  }
+
+
+  const ProductCardWrapper = ({ produto }: { produto: Produto }) => {
+    const handleAddToCart = (produto: any) => {
+      handleOpenProductModal(produto)
+    }
+    
+    return (
+      <ProductCard
+        produto={produto as any}
+        descricao={produto.descricao_capa || produto.descricao_geral || produto.descricao || "Descrição do produto"}
+        onAddToCart={handleAddToCart}
+      />
+    )
   }
 
   // Função para buscar
@@ -213,57 +231,10 @@ const Busca: React.FC = () => {
 
             {/* pprodutos */}
             {produtosFiltrados.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {produtosFiltrados.map((produto) => {
-                  const preco = produto.preco_promocional || produto.preco
-                  return (
-                    <div
-                      key={produto.id}
-                      className="bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => handleOpenProductModal(produto)}
-                    >
-                      {/* imagem do produto */}
-                      <div className="w-full aspect-square bg-gray-200 flex items-center justify-center">
-                        {produto.image_url ? (
-                          <img
-                            src={produto.image_url}
-                            alt={produto.titulo}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-gray-500">Sem imagem</span>
-                        )}
-                      </div>
-
-                      {/* nformações do produto */}
-                      <div className="p-4 relative">
-                        <div className="flex items-baseline justify-between mb-2">
-                          <h3 className="text-lg font-bold text-gray-900">{produto.titulo}</h3>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-montserrat font-light text-kaiserhaus-dark-brown">
-                              {preco.toFixed(2).replace('.', ',')}
-                            </span>
-                            {produto.preco_promocional && (
-                              <span className="text-lg font-montserrat font-light text-gray-500 line-through">
-                                {produto.preco.toFixed(2).replace('.', ',')}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        
-                        {produto.descricao_geral && (
-                          <p className="text-sm text-gray-600 mb-8 line-clamp-2">
-                            {produto.descricao_geral}
-                          </p>
-                        )}
-                        
-                        <button className="absolute bottom-4 left-4 text-sm text-kaiserhaus-dark-brown font-medium hover:opacity-80 transition">
-                          Ver detalhes →
-                        </button>
-                      </div>
-                    </div>
-                  )
-                })}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {produtosFiltrados.map((produto) => (
+                  <ProductCardWrapper key={produto.id} produto={produto} />
+                ))}
               </div>
             ) : (
               /* estado vazio */
