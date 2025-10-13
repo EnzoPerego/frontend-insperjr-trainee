@@ -33,7 +33,9 @@ const MotoboyPedidosProntos: React.FC = () => {
         body: JSON.stringify({ pedido_id: pedidoId })
       })
       
-      setPedidos(prev => prev.filter(p => p.id !== pedidoId))
+      // nnn remover o pedido da lista, pois ele continua aparecendo com status "Saiu para entrega"
+      // recaregar a lista depedidos para atualizar o status
+      await loadPedidosProntos()
       
       window.location.href = `/motoboy/entrega/${pedidoId}`
     } catch (err: any) {
@@ -76,8 +78,12 @@ const MotoboyPedidosProntos: React.FC = () => {
               <div key={pedido.id} className="bg-white rounded-lg border shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">{pedido.numero}</h3>
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                    Pronto
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    pedido.status === 'Pronto' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {pedido.status}
                   </span>
                 </div>
                 

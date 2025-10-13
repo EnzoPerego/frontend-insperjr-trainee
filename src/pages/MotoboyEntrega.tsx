@@ -239,7 +239,7 @@ const MotoboyEntrega: React.FC = () => {
               </label>
               <input
                 type="text"
-                maxLength="4"
+                maxLength={4}
                 value={codigoEntrega}
                 onChange={(e) => setCodigoEntrega(e.target.value.replace(/\D/g, ''))}
                 className="w-full p-3 border border-gray-300 rounded-lg text-center text-2xl font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"

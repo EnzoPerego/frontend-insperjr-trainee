@@ -124,6 +124,7 @@ export interface PedidoPronto {
     produto: string;
     quantidade: number;
   }>;
+  status: string;
 }
 
 export interface PedidoAtribuido {
