@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </p>
         <button 
           onClick={() => onAddToCart(produto)}
-          className="text-sm text-kaiserhaus-dark-brown font-medium hover:text-kaiserhaus-light-brown transition"
+          className="text-sm text-kaiserhaus-dark-brown font-medium hover:text-kaiserhaus-light-brown transition text-left"
         >
           Adicionar ao carrinho →
         </button>

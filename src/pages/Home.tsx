@@ -148,11 +148,10 @@ export default function Home(): React.JSX.Element {
               </p>
 
               <a
-                href="#menu"
+                href="/cardapio"
                 className="inline-flex items-center mt-6 rounded-md bg-kaiserhaus-dark-brown px-5 py-3 font-semibold text-white shadow hover:opacity-90 transition"
               >
-                Faça seu pedido! 
-                {/* aprendendo como dar pr */}
+                Faça seu pedido!
               </a>
               
             </div>
